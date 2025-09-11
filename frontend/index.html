@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
@@ -31,6 +33,26 @@
           <div class="card balance">
             <h3>Balance</h3>
             <p id="balance">$0.00</p>
+          </div>
+        </div>
+      </section>
+      
+      <section class="charts-section">
+        <h2>Financial Analytics</h2>
+        <div class="chart-container">
+          <div class="chart-wrapper">
+            <h3>Income vs Expenses</h3>
+            <canvas id="income-expense-chart"></canvas>
+          </div>
+          <div class="chart-wrapper">
+            <h3>Expense Categories</h3>
+            <canvas id="expense-categories-chart"></canvas>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-wrapper">
+            <h3>Monthly Trend</h3>
+            <canvas id="monthly-trend-chart"></canvas>
           </div>
         </div>
       </section>
