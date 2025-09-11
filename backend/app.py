@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
-from werkzeug.security import generate_password_hash, check_password_hash
+import bcrypt  # New dependency for password hashing
+from werkzeug.security import check_password_hash  # Legacy verification only
 from database import get_db_connection, init_db
 from datetime import timedelta
 import datetime
@@ -32,7 +33,9 @@ def signup():
     if len(password) < 6:
         return jsonify({"message": "Password must be at least 6 characters"}), 400
 
-    hashed_password = generate_password_hash(password)
+    # Hash password using bcrypt (store as utf-8 string). Legacy users keep PBKDF2 hashes.
+    salt = bcrypt.gensalt(rounds=12)
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -74,16 +77,31 @@ def login():
     user = cursor.fetchone()
     conn.close()
     
-    if user and check_password_hash(user["password"], password):
-        # Create access token. Cast identity to string to avoid PyJWT 422 "Subject must be a string" errors.
-        access_token = create_access_token(identity=str(user["id"]))
-        return jsonify({
-            "message": "Login successful",
-            "access_token": access_token,
-            "user_id": user["id"],
-            "username": user["username"],
-            "email": user["email"]
-        })
+    if user:
+        stored_hash = user["password"] or ""
+        valid = False
+        # Detect bcrypt hash prefixes
+        if stored_hash.startswith(("$2a$", "$2b$", "$2y$")):
+            try:
+                valid = bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode('utf-8'))
+            except ValueError:
+                valid = False
+        else:
+            # Fallback to Werkzeug PBKDF2 check for legacy accounts
+            try:
+                valid = check_password_hash(stored_hash, password)
+            except Exception:
+                valid = False
+
+        if valid:
+            access_token = create_access_token(identity=str(user["id"]))
+            return jsonify({
+                "message": "Login successful",
+                "access_token": access_token,
+                "user_id": user["id"],
+                "username": user["username"],
+                "email": user["email"]
+            })
     
     return jsonify({"message": "Invalid credentials"}), 401
 
