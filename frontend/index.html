@@ -7,95 +7,214 @@
   <link rel="stylesheet" href="style.css">
   <!-- Chart.js for data visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>BudgetWise Dashboard</h1>
-      <div class="user-section">
-        <span>Welcome, <span id="username-display"></span></span>
-        <button id="logout-btn">Logout</button>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1 class="logo">BudgetWise</h1>
       </div>
-    </header>
+      <ul class="sidebar-menu">
+        <li class="active"><a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#transactions"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+        <li><a href="#analytics"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+        <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
 
-    <main>
-      <section class="summary-section">
-        <h2>Summary</h2>
-        <div class="summary-cards">
-          <div class="card income">
-            <h3>Income</h3>
-            <p id="total-income">$0.00</p>
+    <div class="main-content">
+      <header class="dashboard-header">
+        <div class="header-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search transactions...">
+        </div>
+        <div class="user-section">
+          <div class="notifications">
+            <i class="far fa-bell"></i>
           </div>
-          <div class="card expense">
-            <h3>Expenses</h3>
-            <p id="total-expense">$0.00</p>
-          </div>
-          <div class="card balance">
-            <h3>Balance</h3>
-            <p id="balance">$0.00</p>
+          <div class="user-profile">
+            <span>Welcome, <span id="username-display"></span></span>
+            <div class="user-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
           </div>
         </div>
-      </section>
-      
-      <section class="charts-section">
-        <h2>Financial Analytics</h2>
-        <div class="chart-container">
-          <div class="chart-wrapper">
-            <h3>Income vs Expenses</h3>
-            <canvas id="income-expense-chart"></canvas>
-          </div>
-          <div class="chart-wrapper">
-            <h3>Expense Categories</h3>
-            <canvas id="expense-categories-chart"></canvas>
-          </div>
-        </div>
-        <div class="chart-container">
-          <div class="chart-wrapper">
-            <h3>Monthly Trend</h3>
-            <canvas id="monthly-trend-chart"></canvas>
-          </div>
-        </div>
-      </section>
+      </header>
 
-      <section class="add-expense-section">
-        <h2>Add Transaction</h2>
-        <form id="expenseForm">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="date">Date</label>
-              <input type="date" id="date" required>
+      <div class="dashboard-content">
+        <section class="welcome-banner">
+          <div class="welcome-text">
+            <h2>Welcome back, <span id="username-display2"></span>!</h2>
+            <p>Here's a summary of your financial situation</p>
+          </div>
+          <div class="date-display">
+            <i class="far fa-calendar-alt"></i>
+            <span id="current-date"></span>
+          </div>
+        </section>
+        
+        <section class="summary-section">
+          <div class="summary-cards">
+            <div class="card income">
+              <div class="card-icon">
+                <i class="fas fa-arrow-down"></i>
+              </div>
+              <div class="card-content">
+                <h3>Income</h3>
+                <p id="total-income">$0.00</p>
+                <span class="card-period">Current Month</span>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="type">Type</label>
-              <select id="type">
-                <option value="Expense">Expense</option>
-                <option value="Income">Income</option>
-              </select>
+            <div class="card expense">
+              <div class="card-icon">
+                <i class="fas fa-arrow-up"></i>
+              </div>
+              <div class="card-content">
+                <h3>Expenses</h3>
+                <p id="total-expense">$0.00</p>
+                <span class="card-period">Current Month</span>
+              </div>
+            </div>
+            <div class="card balance">
+              <div class="card-icon">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <div class="card-content">
+                <h3>Balance</h3>
+                <p id="balance">$0.00</p>
+                <span class="card-period">Current Status</span>
+              </div>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="category">Category</label>
-              <input type="text" id="category" placeholder="E.g., Food, Rent" required>
+        </section>
+        
+        <div class="dashboard-grid">
+          <section class="charts-section">
+            <div class="section-header">
+              <h2><i class="fas fa-chart-pie"></i> Financial Analytics</h2>
+              <div class="section-actions">
+                <select id="chart-period">
+                  <option value="month">This Month</option>
+                  <option value="quarter">This Quarter</option>
+                  <option value="year">This Year</option>
+                  <option value="all">All Time</option>
+                </select>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="amount">Amount</label>
-              <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required>
+            
+            <div class="chart-grid">
+              <div class="chart-card">
+                <h3>Income vs Expenses</h3>
+                <div class="chart-container">
+                  <canvas id="income-expense-chart"></canvas>
+                </div>
+              </div>
+              
+              <div class="chart-card">
+                <h3>Expense Categories</h3>
+                <div class="chart-container">
+                  <canvas id="expense-categories-chart"></canvas>
+                </div>
+              </div>
+              
+              <div class="chart-card full-width">
+                <h3>Monthly Trend</h3>
+                <div class="chart-container">
+                  <canvas id="monthly-trend-chart"></canvas>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="note">Note (Optional)</label>
-            <input type="text" id="note" placeholder="Any additional details">
-          </div>
-          <button type="submit">Add Transaction</button>
-        </form>
-      </section>
-
-      <section class="expenses-section">
-        <h2>Transaction History</h2>
-        <ul id="expenseList" class="expense-list"></ul>
-      </section>
-    </main>
+          </section>
+          
+          <section class="add-transaction-section">
+            <div class="section-header">
+              <h2><i class="fas fa-plus-circle"></i> Add Transaction</h2>
+            </div>
+            
+            <form id="expenseForm" class="transaction-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="date">Date</label>
+                  <div class="input-with-icon">
+                    <i class="far fa-calendar"></i>
+                    <input type="date" id="date" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="type">Type</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-tag"></i>
+                    <select id="type">
+                      <option value="Expense">Expense</option>
+                      <option value="Income">Income</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="category">Category</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-folder"></i>
+                    <input type="text" id="category" placeholder="E.g., Food, Rent" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="amount">Amount</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                    <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="note">Note (Optional)</label>
+                <div class="input-with-icon">
+                  <i class="far fa-sticky-note"></i>
+                  <input type="text" id="note" placeholder="Any additional details">
+                </div>
+              </div>
+              
+              <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> Add Transaction</button>
+            </form>
+          </section>
+          
+          <section class="transaction-history-section">
+            <div class="section-header">
+              <h2><i class="fas fa-history"></i> Transaction History</h2>
+              <div class="section-actions">
+                <div class="search-transactions">
+                  <input type="text" id="filter-transactions" placeholder="Filter transactions...">
+                  <i class="fas fa-filter"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="transaction-list-container">
+              <div class="transaction-list-header">
+                <span class="col-date">Date</span>
+                <span class="col-category">Category</span>
+                <span class="col-note">Note</span>
+                <span class="col-amount">Amount</span>
+              </div>
+              
+              <ul id="expenseList" class="transaction-list"></ul>
+              
+              <div class="transaction-list-footer">
+                <button id="load-more" class="btn-secondary">Load More</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="dashboard.js"></script>

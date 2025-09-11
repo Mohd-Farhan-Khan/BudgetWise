@@ -15,6 +15,116 @@ function checkAuth() {
   return true;
 }
 
+// UI Enhancement Functions
+function initializeDashboard() {
+  // Set current date in welcome banner
+  const currentDate = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('current-date').textContent = currentDate.toLocaleDateString('en-US', options);
+  
+  // Mobile menu toggle
+  const sidebarToggleBtn = document.createElement('button');
+  sidebarToggleBtn.className = 'mobile-menu-toggle';
+  sidebarToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+  document.querySelector('.dashboard-header').prepend(sidebarToggleBtn);
+  
+  // Create overlay for mobile menu
+  const overlay = document.createElement('div');
+  overlay.className = 'sidebar-overlay';
+  document.querySelector('.dashboard-container').appendChild(overlay);
+  
+  // Add event listeners for mobile menu
+  sidebarToggleBtn.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.toggle('active');
+    overlay.classList.toggle('active');
+  });
+  
+  overlay.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('active');
+    overlay.classList.remove('active');
+  });
+  
+  // Initialize filter for transactions
+  document.getElementById('filter-transactions').addEventListener('input', function() {
+    const filterText = this.value.toLowerCase();
+    const transactions = document.querySelectorAll('#expenseList li');
+    
+    transactions.forEach(transaction => {
+      const category = transaction.querySelector('.col-category').textContent.toLowerCase();
+      const note = transaction.querySelector('.col-note').textContent.toLowerCase();
+      const date = transaction.querySelector('.col-date').textContent.toLowerCase();
+      
+      if (category.includes(filterText) || note.includes(filterText) || date.includes(filterText)) {
+        transaction.style.display = '';
+      } else {
+        transaction.style.display = 'none';
+      }
+    });
+  });
+  
+  // Period selector for charts
+  document.getElementById('chart-period').addEventListener('change', function() {
+    // Reload expenses with period filter
+    loadExpenses();
+  });
+  
+  // Menu item click handlers
+  document.querySelectorAll('.sidebar-menu a').forEach(menuItem => {
+    menuItem.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Remove active class from all menu items
+      document.querySelectorAll('.sidebar-menu li').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Add active class to clicked item's parent
+      this.parentElement.classList.add('active');
+      
+      // Handle navigation (for now just scroll to relevant section)
+      const targetSection = this.getAttribute('href').substring(1);
+      let targetElement;
+      
+      switch(targetSection) {
+        case 'dashboard':
+          targetElement = document.querySelector('.welcome-banner');
+          break;
+        case 'transactions':
+          targetElement = document.querySelector('.transaction-history-section');
+          break;
+        case 'analytics':
+          targetElement = document.querySelector('.charts-section');
+          break;
+        default:
+          targetElement = document.querySelector('.welcome-banner');
+      }
+      
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+        
+        // Close mobile menu if open
+        document.querySelector('.sidebar').classList.remove('active');
+        document.querySelector('.sidebar-overlay').classList.remove('active');
+      }
+    });
+  });
+  
+  // Initialize Load More button
+  document.getElementById('load-more').addEventListener('click', function() {
+    // This would fetch more transactions in a real implementation
+    this.textContent = 'No more transactions';
+    this.disabled = true;
+  });
+}
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'login.html';
+    return false;
+  }
+  return true;
+}
+
 // Get authenticated user details
 function getUser() {
   return {
@@ -38,6 +148,11 @@ document.getElementById("expenseForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   
   if (!checkAuth()) return;
+  
+  const submitButton = e.target.querySelector('button[type="submit"]');
+  const originalText = submitButton.innerHTML;
+  submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+  submitButton.disabled = true;
   
   const date = document.getElementById("date").value;
   const category = document.getElementById("category").value;
@@ -82,7 +197,9 @@ document.getElementById("expenseForm").addEventListener("submit", async (e) => {
       return; // Don't reload expenses on failure
     }
 
-    alert((data && (data.message || data.msg)) || "Transaction added successfully");
+    // Show success notification
+    showNotification((data && (data.message || data.msg)) || "Transaction added successfully");
+    
     document.getElementById("expenseForm").reset();
     
     // Set default date to today again after form reset
@@ -93,14 +210,104 @@ document.getElementById("expenseForm").addEventListener("submit", async (e) => {
   } catch (err) {
     console.error("Error adding expense:", err);
     alert("Failed to add transaction. Please try again.");
+  } finally {
+    submitButton.innerHTML = originalText;
+    submitButton.disabled = false;
   }
 });
+
+// Show notification function
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.className = 'notification';
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas fa-check-circle"></i>
+      <span>${message}</span>
+    </div>
+    <button class="notification-close"><i class="fas fa-times"></i></button>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Add styles for notification
+  const style = document.createElement('style');
+  style.textContent = `
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4caf50;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1000;
+      animation: slideIn 0.3s forwards;
+    }
+    .notification-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .notification-close {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      opacity: 0.8;
+      margin-left: 15px;
+    }
+    .notification-close:hover {
+      opacity: 1;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Close button handler
+  notification.querySelector('.notification-close').addEventListener('click', () => {
+    notification.style.animation = 'slideOut 0.3s forwards';
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  });
+  
+  // Auto-close after 5 seconds
+  setTimeout(() => {
+    if (document.body.contains(notification)) {
+      notification.style.animation = 'slideOut 0.3s forwards';
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    }
+  }, 5000);
+}
 
 // Load expenses for the authenticated user
 async function loadExpenses() {
   if (!checkAuth()) return;
   
   try {
+    // Show loading state
+    const expenseList = document.getElementById("expenseList");
+    expenseList.innerHTML = `
+      <li style="display: flex; justify-content: center; padding: 30px;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #757575;"></i>
+      </li>
+    `;
+    
     const res = await fetch(`${API_BASE}/expenses`, {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem('token')}`
@@ -124,42 +331,80 @@ async function loadExpenses() {
         logout();
         return;
       }
-      document.getElementById("expenseList").innerHTML = `<li>${errMsg}</li>`;
+      expenseList.innerHTML = `
+        <li style="text-align: center; padding: 20px; color: #f44336;">
+          <i class="fas fa-exclamation-circle"></i> ${errMsg}
+        </li>
+      `;
       return;
     }
 
     const expenses = await res.json();
-    const list = document.getElementById("expenseList");
-    list.innerHTML = "";
+    expenseList.innerHTML = "";
     
     if (expenses.length === 0) {
-      list.innerHTML = "<li>No expenses found. Add your first expense!</li>";
-      document.getElementById("total").textContent = "$0.00";
+      expenseList.innerHTML = `
+        <li style="text-align: center; padding: 30px; color: #757575;">
+          <i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+          No transactions found. Add your first transaction!
+        </li>
+      `;
+      
+      // Reset summary cards
+      document.getElementById("total-income").textContent = "$0.00";
+      document.getElementById("total-expense").textContent = "$0.00";
+      document.getElementById("balance").textContent = "$0.00";
+      
+      // Show empty state charts
+      updateCharts([]);
       return;
     }
     
     let totalExpense = 0;
     let totalIncome = 0;
     
-    expenses.forEach(exp => {
-      const li = document.createElement("li");
-      const formattedDate = new Date(exp.date).toLocaleDateString();
+    // Apply period filter if set
+    const period = document.getElementById('chart-period').value;
+    let filteredExpenses = expenses;
+    
+    if (period !== 'all') {
+      const now = new Date();
+      const startDate = new Date();
       
-      if (exp.type === 'Income') {
-        totalIncome += parseFloat(exp.amount);
-        li.className = 'income';
-      } else {
-        totalExpense += parseFloat(exp.amount);
-        li.className = 'expense';
+      if (period === 'month') {
+        startDate.setMonth(now.getMonth() - 1);
+      } else if (period === 'quarter') {
+        startDate.setMonth(now.getMonth() - 3);
+      } else if (period === 'year') {
+        startDate.setFullYear(now.getFullYear() - 1);
       }
       
+      filteredExpenses = expenses.filter(exp => {
+        const expDate = new Date(exp.date);
+        return expDate >= startDate;
+      });
+    }
+    
+    // Process all expenses for totals (not just filtered ones)
+    expenses.forEach(exp => {
+      if (exp.type === 'Income') {
+        totalIncome += parseFloat(exp.amount);
+      } else {
+        totalExpense += parseFloat(exp.amount);
+      }
+      
+      const li = document.createElement("li");
+      li.className = exp.type.toLowerCase();
+      
+      const formattedDate = new Date(exp.date).toLocaleDateString();
+      
       li.innerHTML = `
-        <span class="date">${formattedDate}</span>
-        <span class="category">${exp.category || 'Uncategorized'}</span>
-        <span class="amount">${exp.type === 'Income' ? '+' : '-'}$${parseFloat(exp.amount).toFixed(2)}</span>
-        ${exp.note ? `<span class="note">${exp.note}</span>` : ''}
+        <span class="col-date">${formattedDate}</span>
+        <span class="col-category">${exp.category || 'Uncategorized'}</span>
+        <span class="col-note">${exp.note || '-'}</span>
+        <span class="col-amount">${exp.type === 'Income' ? '+' : '-'}$${parseFloat(exp.amount).toFixed(2)}</span>
       `;
-      list.appendChild(li);
+      expenseList.appendChild(li);
     });
     
     // Update summary
@@ -167,11 +412,24 @@ async function loadExpenses() {
     document.getElementById("total-income").textContent = `$${totalIncome.toFixed(2)}`;
     document.getElementById("balance").textContent = `$${(totalIncome - totalExpense).toFixed(2)}`;
     
-    // Update charts with the expenses data
-    updateCharts(expenses);
+    // Update charts with filtered expenses data
+    updateCharts(filteredExpenses);
+    
+    // If we have more than 20 transactions, enable load more button
+    if (expenses.length > 20) {
+      document.getElementById('load-more').disabled = false;
+      document.getElementById('load-more').textContent = 'Load More';
+    } else {
+      document.getElementById('load-more').disabled = true;
+      document.getElementById('load-more').textContent = 'No more transactions';
+    }
   } catch (err) {
     console.error("Error loading expenses:", err);
-    document.getElementById("expenseList").innerHTML = "<li>Error loading expenses. Please try again.</li>";
+    document.getElementById("expenseList").innerHTML = `
+      <li style="text-align: center; padding: 20px; color: #f44336;">
+        <i class="fas fa-exclamation-triangle"></i> Error loading transactions. Please try again.
+      </li>
+    `;
   }
 }
 
@@ -181,12 +439,14 @@ function setupUserInfo() {
   
   const user = getUser();
   document.getElementById("username-display").textContent = user.username;
+  document.getElementById("username-display2").textContent = user.username;
   document.getElementById("logout-btn").addEventListener("click", logout);
 }
 
 // Initialize dashboard
 window.addEventListener('load', () => {
   setupUserInfo();
+  initializeDashboard();
   loadExpenses();
   
   // Set default date to today
@@ -286,6 +546,38 @@ function renderExpenseCategoriesChart(expenses) {
     expenseCategoriesChart.destroy();
   }
   
+  // Check if we have any data
+  if (categoryLabels.length === 0) {
+    // Show empty state
+    categoryLabels.push('No Data');
+    categoryAmounts.push(1);
+    
+    expenseCategoriesChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: categoryLabels,
+        datasets: [{
+          data: categoryAmounts,
+          backgroundColor: ['#e0e0e0'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            enabled: false
+          }
+        }
+      }
+    });
+    return;
+  }
+  
   expenseCategoriesChart = new Chart(ctx, {
     type: 'pie',
     data: {
@@ -360,6 +652,54 @@ function renderMonthlyTrendChart(expenses) {
   // Destroy previous chart instance if it exists
   if (monthlyTrendChart) {
     monthlyTrendChart.destroy();
+  }
+  
+  // Check if we have any data
+  if (monthLabels.length === 0) {
+    // Show empty state
+    monthlyTrendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['No Data'],
+        datasets: [
+          {
+            label: 'Income',
+            data: [0],
+            borderColor: '#e0e0e0',
+            backgroundColor: 'rgba(224, 224, 224, 0.1)',
+            borderDashed: [5, 5]
+          },
+          {
+            label: 'Expenses',
+            data: [0],
+            borderColor: '#e0e0e0',
+            backgroundColor: 'rgba(224, 224, 224, 0.1)',
+            borderDashed: [5, 5]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => `$${value}`
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            enabled: false
+          }
+        }
+      }
+    });
+    return;
   }
   
   monthlyTrendChart = new Chart(ctx, {
