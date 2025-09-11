@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - BudgetWise</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <main>
+      <h1>BudgetWise - Login</h1>
+      <div id="error-message" class="error-message"></div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+    </main>
+  </div>
+
+  <script>
+  const API_BASE = "http://127.0.0.1:5001"; // updated port
+    
+    // Check if user is already logged in
+    if (localStorage.getItem('token')) {
+      window.location.href = 'index.html';
+    }
+    
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('error-message');
+      
+      try {
+        const response = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Store token and user info in localStorage
+          localStorage.setItem('token', data.access_token);
+          localStorage.setItem('user_id', data.user_id);
+          localStorage.setItem('username', data.username);
+          localStorage.setItem('email', data.email);
+          
+          // Redirect to dashboard
+          window.location.href = 'index.html';
+        } else {
+          errorMessage.textContent = data.message || "Invalid credentials";
+        }
+      } catch (err) {
+        errorMessage.textContent = "Server error. Please try again later.";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

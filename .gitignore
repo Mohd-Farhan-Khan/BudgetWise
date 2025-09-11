@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+budgetwise_env/
+
+# Logs & runtime
+*.log
+server.log
+instance/
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Coverage / testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Node / misc (in case of adding tooling)
+node_modules/
+package-lock.json
+
+# Build outputs
+build/
+dist/
+
+# Env files
+*.env
+.env.*
+
+# Cache
+.mypy_cache/
+pytestdebug.log

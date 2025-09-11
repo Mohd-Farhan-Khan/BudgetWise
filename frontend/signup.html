@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up - BudgetWise</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <main>
+      <h1>BudgetWise - Sign Up</h1>
+      <div id="error-message" class="error-message"></div>
+      <form id="signup-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" name="confirm-password" required>
+        </div>
+        <button type="submit">Sign up</button>
+      </form>
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </main>
+  </div>
+
+  <script>
+  const API_BASE = "http://127.0.0.1:5001"; // updated port
+    
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const errorMessage = document.getElementById('error-message');
+      
+      // Client-side validation
+      if (password !== confirmPassword) {
+        errorMessage.textContent = "Passwords do not match";
+        return;
+      }
+      
+      if (password.length < 6) {
+        errorMessage.textContent = "Password must be at least 6 characters";
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE}/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          alert("Account created successfully! Please login.");
+          window.location.href = "login.html";
+        } else {
+          errorMessage.textContent = data.message || "Error creating account";
+        }
+      } catch (err) {
+        errorMessage.textContent = "Server error. Please try again later.";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
