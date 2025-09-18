@@ -4,15 +4,16 @@
 
 ## Features
 - User signup & login (JWT auth – 24h expiry)
-- Secure password hashing (Werkzeug)
+- Secure password hashing (bcrypt with Werkzeug fallback)
 - MySQL persistence (users, expenses)
+- Environment-based configuration (.env file)
 - Add Income / Expense with category, note, date
 - Transaction history & summary (Income / Expenses / Balance)
 - CORS‑enabled API for local frontend
 - Lightweight schema migration for added columns
 
 ## Tech Stack
-Backend: Flask, flask-jwt-extended, mysql-connector-python  
+Backend: Flask, flask-jwt-extended, mysql-connector-python, bcrypt, python-dotenv  
 Frontend: HTML, CSS, vanilla JS  
 DB: MySQL
 
@@ -27,6 +28,8 @@ backend/
   forecast.py         # Placeholder
   routes.py           # Unused FastAPI router
   requirements.txt
+  .env                # Environment variables (not in git)
+  .env.example        # Environment template
 frontend/
   index.html          # Dashboard (protected)
   login.html          # Login
@@ -40,18 +43,37 @@ budgetwise_env/       # Local venv (ignore)
 Python 3.12+, MySQL server. Port 5000 may be used by macOS AirPlay; app runs on 5001.
 
 ## Quick Start
+
+### 1. Set up Python Environment
 ```bash
 python3 -m venv budgetwise_env
 source budgetwise_env/bin/activate
 pip install -r backend/requirements.txt
+```
 
-# (Optional) env vars instead of hard-coded secrets
-export BUDGETWISE_DB_HOST=localhost
-export BUDGETWISE_DB_USER=root
-export BUDGETWISE_DB_PASSWORD=your_password
-export BUDGETWISE_DB_NAME=budgetwise
-export BUDGETWISE_JWT_SECRET=change-me
+### 2. Configure Environment Variables
+```bash
+# Copy the example file and edit with your values
+cp backend/.env.example backend/.env
 
+# Edit backend/.env with your database credentials:
+# DB_HOST=localhost
+# DB_USER=root
+# DB_PASSWORD=your_mysql_password
+# DB_NAME=budgetwise
+# JWT_SECRET_KEY=generate-a-strong-secret-key
+# JWT_ACCESS_TOKEN_EXPIRES_HOURS=24
+# FLASK_DEBUG=True
+# FLASK_PORT=5001
+```
+
+**Important:** Generate a strong JWT secret key:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+### 3. Start the Application
+```bash
 python backend/app.py   # http://127.0.0.1:5001
 
 # Serve frontend (optionally):
@@ -94,11 +116,12 @@ Authorization: Bearer <token>
 | "Server error" on signup     | Frontend hitting wrong port          | Hard refresh (Cmd+Shift+R) |
 
 ## Improvements To Do
-- Move secrets to env vars (see Config section)
 - Add edit/delete for expenses
 - Pagination & filtering
 - Hook up forecasting prototype
 - Add tests (pytest) & linting
+- Make frontend API URL configurable
+- Add input validation and error handling
 
 ## Contributing
 Small PRs welcome. Clean code, clear commit messages.
