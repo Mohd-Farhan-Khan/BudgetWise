@@ -38,9 +38,12 @@ package-lock.json
 build/
 dist/
 
-# Env files
-*.env
-.env.*
+# Env files (but allow .env.example)
+.env
+.env.local
+.env.development
+.env.production
+.env.test
 
 # Cache
 .mypy_cache/

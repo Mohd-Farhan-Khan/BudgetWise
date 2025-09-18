@@ -9,3 +9,5 @@ matplotlib==3.9.2
 seaborn==0.13.2
 mysql-connector-python==9.0.0
 bcrypt==4.2.0
+python-dotenv==1.0.0
+sqlalchemy

@@ -7,14 +7,23 @@ from database import get_db_connection, init_db
 from datetime import timedelta
 import datetime
 import mysql.connector
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# JWT Configuration
-app.config["JWT_SECRET_KEY"] = "your-secret-key"  # Change this in production!
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
+# JWT Configuration from environment variables
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES_HOURS", "24")))
 jwt = JWTManager(app)
+
+# Validate required environment variables
+if not app.config["JWT_SECRET_KEY"]:
+    raise ValueError("JWT_SECRET_KEY environment variable is required")
 
 # Initialize DB
 init_db()
@@ -179,5 +188,7 @@ def debug_users():
         conn.close()
 
 if __name__ == "__main__":
-    # Use a non-conflicting port (5000 may be taken by macOS AirPlay Receiver)
-    app.run(debug=True, port=5001, use_reloader=False)
+    # Use configuration from environment variables
+    debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
+    port = int(os.getenv("FLASK_PORT", "5001"))
+    app.run(debug=debug_mode, port=port, use_reloader=False)
