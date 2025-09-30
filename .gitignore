@@ -14,6 +14,13 @@ env/
 venv/
 budgetwise_env/
 
+# LangChain / Vector indexes & cache
+backend/langchain_store/
+backend/langchain_store/**
+*langchain_store/
+*.faiss
+*.pkl
+
 # Logs & runtime
 *.log
 server.log

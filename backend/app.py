@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import logging
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 import bcrypt  # New dependency for password hashing
@@ -8,17 +9,22 @@ from datetime import timedelta
 import datetime
 import mysql.connector
 import os
-from dotenv import load_dotenv
+# Import the new config module
+from config import JWT_SECRET_KEY, JWT_ACCESS_TOKEN_EXPIRES_HOURS, FLASK_DEBUG, FLASK_PORT
+# Import the new LangChain RAG implementation
+import langchain_rag
 
-# Load environment variables
-load_dotenv()
+# Logger
+logger = logging.getLogger("api")
+if not logger.handlers:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 app = Flask(__name__)
 CORS(app)
 
-# JWT Configuration from environment variables
-app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES_HOURS", "24")))
+# JWT Configuration from config module
+app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=JWT_ACCESS_TOKEN_EXPIRES_HOURS)
 jwt = JWTManager(app)
 
 # Validate required environment variables
@@ -78,6 +84,7 @@ def login():
     password = data.get("password")
     
     if not username or not password:
+        logger.warning("Login attempt with missing fields")
         return jsonify({"message": "Missing required fields"}), 400
     
     conn = get_db_connection()
@@ -103,6 +110,7 @@ def login():
                 valid = False
 
         if valid:
+            logger.info(f"Login successful for user_id={user['id']} username={user['username']}")
             access_token = create_access_token(identity=str(user["id"]))
             return jsonify({
                 "message": "Login successful",
@@ -111,7 +119,7 @@ def login():
                 "username": user["username"],
                 "email": user["email"]
             })
-    
+    logger.warning(f"Invalid login for username={username}")
     return jsonify({"message": "Invalid credentials"}), 401
 
 # --- Add Expense ---
@@ -124,21 +132,158 @@ def add_expense():
     
     # Ensure the expense belongs to the authenticated user
     if "user_id" in data and int(data["user_id"]) != int(current_user_id):
+        logger.warning(f"Unauthorized add_expense attempt by user_id={current_user_id} for user_id={data.get('user_id')}")
         return jsonify({"message": "Unauthorized to add expense for another user"}), 403
     
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     try:
+        logger.info(f"Adding expense for user_id={current_user_id} category={data.get('category')} amount={data.get('amount')} type={data.get('type')}")
         cursor.execute("""
             INSERT INTO expenses (user_id, date, category, note, amount, type)
             VALUES (%s, %s, %s, %s, %s, %s)
         """, (current_user_id, data["date"], data["category"], data["note"], data["amount"], data["type"]))
         conn.commit()
-        return jsonify({"message": "Expense added successfully"}), 201
+        # Fetch the inserted row id and row for FAISS sync
+        expense_id = cursor.lastrowid
+        cursor.execute("SELECT id, user_id, date, category, note, amount, type FROM expenses WHERE id=%s", (expense_id,))
+        row = cursor.fetchone()
+        logger.info(f"Expense inserted id={expense_id}")
+        
+        # Update LangChain RAG index
+        try:
+            ok = langchain_rag.rag_service.add_transaction_to_index(row)
+            logger.info(f"LangChain index update for expense_id={expense_id} ok={ok}")
+        except Exception as e:
+            # Do not fail API if indexing fails; log to console
+            logger.exception(f"LangChain RAG indexing error for expense_id={expense_id}")
+            
+        return jsonify({"message": "Expense added successfully", "id": expense_id}), 201
     except Exception as e:
+        logger.exception("Failed to add expense")
         return jsonify({"message": "Failed to add expense", "error": str(e)}), 400
     finally:
         conn.close()
+# --- Legacy RAG Query Endpoint (redirects to LangChain) ---
+@app.route("/chatbot/rag_query", methods=["POST"])
+@jwt_required()
+def rag_query():
+    current_user_id = int(get_jwt_identity())
+    payload = request.json or {}
+    query = (payload.get("query") or "").strip()
+    top_k = int(payload.get("top_k", 10))
+    if not query:
+        return jsonify({"message": "Query is required"}), 400
+
+    try:
+        # Redirect to LangChain implementation
+        logger.info(f"Legacy RAG query redirected to LangChain user_id={current_user_id} top_k={top_k} query='{query[:80]}'")
+        result = langchain_rag.rag_service.query_with_rag(
+            user_id=current_user_id,
+            query=query,
+            top_k=top_k
+        )
+        logger.info(f"LangChain query answered matches={len(result.get('matches', []))}")
+        return jsonify(result), 200
+    except Exception as e:
+        logger.exception("Failed to run RAG query")
+        return jsonify({"message": "Failed to run RAG query", "error": str(e)}), 500
+
+
+# --- Legacy: Build/refresh FAISS index for the current user ---
+@app.route("/chatbot/rag_build", methods=["POST"])  # idempotent
+@jwt_required()
+def rag_build():
+    current_user_id = int(get_jwt_identity())
+    try:
+        # Redirect to LangChain implementation
+        count = langchain_rag.rag_service.index_user_transactions(
+            user_id=current_user_id,
+            reindex=bool((request.json or {}).get("reindex", False))
+        )
+        return jsonify({"message": "Index built", "indexed": count}), 200
+    except Exception as e:
+        return jsonify({"message": "Failed to build index", "error": str(e)}), 500
+
+
+# --- LangChain RAG Query Endpoint ---
+@app.route("/chatbot/langchain/query", methods=["POST"])
+@jwt_required()
+def langchain_rag_query():
+    current_user_id = int(get_jwt_identity())
+    payload = request.json or {}
+    query = (payload.get("query") or "").strip()
+    top_k = int(payload.get("top_k", 10))
+    
+    if not query:
+        return jsonify({"message": "Query is required"}), 400
+
+    try:
+        # Execute the full RAG pipeline with the LangChain implementation
+        logger.info(f"LangChain RAG query user_id={current_user_id} top_k={top_k} query='{query[:80]}'")
+        result = langchain_rag.rag_service.query_with_rag(
+            user_id=current_user_id,
+            query=query,
+            top_k=top_k
+        )
+        logger.info(f"LangChain RAG query answered matches={len(result.get('matches', []))}")
+        return jsonify(result), 200
+    except Exception as e:
+        logger.exception("Failed to run LangChain RAG query")
+        return jsonify({
+            "message": "Failed to run LangChain RAG query",
+            "error": str(e)
+        }), 500
+
+
+# --- LangChain: Build/refresh index for the current user ---
+@app.route("/chatbot/langchain/build", methods=["POST"])
+@jwt_required()
+def langchain_rag_build():
+    current_user_id = int(get_jwt_identity())
+    payload = request.json or {}
+    reindex = bool(payload.get("reindex", True))  # Default to True for better results
+    
+    try:
+        logger.info(f"LangChain build request user_id={current_user_id} reindex={reindex}")
+        # Index or reindex the user's transactions
+        count = langchain_rag.rag_service.index_user_transactions(
+            user_id=current_user_id,
+            reindex=reindex
+        )
+        logger.info(f"LangChain build completed user_id={current_user_id} indexed_count={count}")
+        return jsonify({
+            "message": "LangChain index built successfully",
+            "indexed": count
+        }), 200
+    except Exception as e:
+        status = 500
+        err_str = str(e)
+        # Surface 429-like rate limit signals
+        if "429" in err_str or "rate" in err_str.lower() or "exceed" in err_str.lower():
+            status = 429
+        logger.exception(f"LangChain build failed user_id={current_user_id} status={status}")
+        return jsonify({
+            "message": "Failed to build LangChain index",
+            "error": err_str,
+            "code": "rate_limited" if status == 429 else "index_failed"
+        }), status
+
+
+# --- LangChain: Get index statistics ---
+@app.route("/chatbot/langchain/stats", methods=["GET"])
+@jwt_required()
+def langchain_rag_stats():
+    try:
+        stats = langchain_rag.rag_service.get_index_stats()
+        logger.info(f"LangChain stats fetched total_docs={stats.get('total_documents',0)}")
+        return jsonify(stats), 200
+    except Exception as e:
+        logger.exception("Failed to get index statistics")
+        return jsonify({
+            "message": "Failed to get index statistics",
+            "error": str(e)
+        }), 500
 
 # --- Get Expenses ---
 @app.route("/expenses", methods=["GET"])
@@ -187,8 +332,22 @@ def debug_users():
     finally:
         conn.close()
 
+# --- DEBUG: RAG status ---
+@app.route("/debug/rag")
+def debug_rag():
+    try:
+        stats = langchain_rag.rag_service.get_index_stats()
+        return jsonify({
+            "vector_store_present": bool(langchain_rag.rag_service.vector_store is not None),
+            "vector_dir": langchain_rag.VECTOR_STORE_DIR if hasattr(langchain_rag, 'VECTOR_STORE_DIR') else "backend/langchain_store",
+            "embedding_model": langchain_rag.EMBEDDING_MODEL if hasattr(langchain_rag, 'EMBEDDING_MODEL') else "models/embedding-001",
+            "llm_model": langchain_rag.GEMINI_MODEL if hasattr(langchain_rag, 'GEMINI_MODEL') else "gemini-1.5-flash",
+            "stats": stats
+        }), 200
+    except Exception as e:
+        logger.exception("Failed debug_rag")
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
-    # Use configuration from environment variables
-    debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
-    port = int(os.getenv("FLASK_PORT", "5001"))
-    app.run(debug=debug_mode, port=port, use_reloader=False)
+    # Use configuration from config module
+    app.run(debug=FLASK_DEBUG, port=FLASK_PORT, use_reloader=False)

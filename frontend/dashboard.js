@@ -1,4 +1,6 @@
 const API_BASE = "http://127.0.0.1:5001"; // updated port
+// Also expose on a global namespace to share with other scripts
+window.BUDGETWISE_API_BASE = API_BASE;
 
 // Chart objects to access globally
 let incomeExpenseChart = null;

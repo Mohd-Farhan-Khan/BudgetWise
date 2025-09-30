@@ -20,6 +20,7 @@
         <li class="active"><a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
         <li><a href="#transactions"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
         <li><a href="#analytics"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+        <li><a href="#assistant"><i class="fas fa-robot"></i> Assistant</a></li>
         <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
       </ul>
       <div class="sidebar-footer">
@@ -212,11 +213,66 @@
               </div>
             </div>
           </section>
+
+          <!-- Finance Assistant with RAG Options -->
+          <section class="transaction-history-section" id="assistant">
+            <div class="section-header">
+              <h2><i class="fas fa-robot"></i> Finance Assistant</h2>
+              <div class="section-actions">
+                <div class="rag-mode-container" style="display:flex;gap:10px;align-items:center">
+                  <select id="rag-mode" class="rag-mode-select" style="padding:6px;border-radius:4px;border:1px solid #ddd">
+                    <option value="basic">Basic RAG</option>
+                    <option value="langchain" selected>LangChain RAG</option>
+                  </select>
+                  <button id="build-index" class="btn-secondary">Build/Refresh Index</button>
+                </div>
+              </div>
+            </div>
+            <div class="chatbox">
+              <div id="chat-messages" class="chat-messages">
+                <div class="msg bot">
+                  <div class="bubble">Welcome to Finance Assistant! Please build the index first by clicking the "Build/Refresh Index" button above.</div>
+                </div>
+                <div class="msg bot">
+                  <div class="bubble">This version uses LangChain for more advanced retrieval and better answers. You can switch between LangChain and Basic RAG using the dropdown above.</div>
+                </div>
+              </div>
+              <form id="chat-form" class="chat-input" onsubmit="return false;">
+                <input id="chat-text" type="text" placeholder="Ask about your finances (e.g., food in August, budget trend)..." required />
+                <button type="button" id="ask-btn" class="btn-primary" style="max-width:160px"><i class="fas fa-paper-plane"></i> Ask</button>
+              </form>
+            </div>
+          </section>
         </div>
       </div>
     </div>
   </div>
 
   <script src="dashboard.js"></script>
+  <script src="rag-chat.js"></script>
+  <script src="langchain-chat.js"></script>
+  <script>
+    // RAG implementation toggle handler
+    document.getElementById('rag-mode').addEventListener('change', function(e) {
+      const mode = e.target.value;
+      console.log('Switching RAG mode to:', mode);
+      localStorage.setItem('rag_mode', mode);
+      
+      // Clear messages and show mode change notification
+      const $messages = document.getElementById('chat-messages');
+      $messages.innerHTML = '';
+      const msg = document.createElement('div');
+      msg.className = 'msg bot';
+      msg.innerHTML = `<div class="bubble">Switched to ${mode === 'langchain' ? 'LangChain' : 'Basic'} RAG mode. Please rebuild the index.</div>`;
+      $messages.appendChild(msg);
+    });
+    
+    // On page load, set the correct mode from storage
+    (function() {
+      const savedMode = localStorage.getItem('rag_mode') || 'langchain';
+      document.getElementById('rag-mode').value = savedMode;
+      console.log('Initial RAG mode:', savedMode);
+    })();
+  </script>
 </body>
 </html>
