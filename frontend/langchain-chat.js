@@ -187,6 +187,43 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
     $askBtn.addEventListener('click', handleQuery);
   }
 
+  // Add clear memory button handler
+  const $clearMemoryBtn = document.getElementById('clear-memory-btn');
+  if ($clearMemoryBtn) {
+    $clearMemoryBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      console.log("Clear memory button clicked");
+      if (!checkAuth()) return;
+      
+      try {
+        addMsg('bot', 'Clearing conversation history...');
+        
+        const res = await fetch(`${LANGCHAIN_API_BASE}/chatbot/langchain/clear-memory`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token()}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const data = await res.json();
+        console.log("Clear memory response:", data);
+        
+        if (res.ok) {
+          addMsg('bot', '🔄 Conversation history cleared! I\'ll start fresh from here. Feel free to ask me anything about your finances!');
+        } else {
+          console.error("Clear memory failed:", data);
+          addMsg('bot', `Failed to clear conversation history: ${data.message || data.error || 'Unknown error'}`);
+        }
+      } catch (e) {
+        console.error("Error clearing memory:", e);
+        addMsg('bot', `Error clearing conversation history: ${e.message}. Please make sure the server is running.`);
+      }
+    });
+  } else {
+    console.warn("Clear memory button not found");
+  }
+
   // Add enter key handler to input field
   $input.addEventListener('keydown', (ev) => {
     if (ev.key === 'Enter') {

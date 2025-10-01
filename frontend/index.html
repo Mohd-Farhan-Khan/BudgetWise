@@ -219,19 +219,21 @@
             <div class="section-header">
               <h2><i class="fas fa-robot"></i> Finance Assistant</h2>
               <div class="section-actions">
+                <button id="clear-memory-btn" class="btn-secondary" title="Clear conversation history"><i class="fas fa-eraser"></i> Clear History</button>
                 <button id="build-index" class="btn-secondary"><i class="fas fa-sync-alt"></i> Build/Refresh Index</button>
               </div>
             </div>
             <div class="chatbox">
               <div id="chat-messages" class="chat-messages">
                 <div class="msg bot">
-                  <div class="bubble">👋 Welcome to Finance Assistant! I'm here to help you understand your finances better.</div>
+                  <div class="bubble">👋 Welcome to Finance Assistant! I'm here to help you understand your finances better. I remember our conversation, so feel free to ask follow-up questions!</div>
                 </div>
                 <div class="msg bot">
                   <div class="bubble">To get started, please click the "Build/Refresh Index" button above to analyze your transactions. Then you can ask me questions like:
 • "How much did I spend on food in August?"
 • "What's my spending trend this month?"
-• "Show me my highest expenses"</div>
+• "Show me my highest expenses"
+• "Compare that to last month" (I'll remember the context!)</div>
                 </div>
               </div>
               <form id="chat-form" class="chat-input" onsubmit="return false;">

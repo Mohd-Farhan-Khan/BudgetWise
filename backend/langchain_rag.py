@@ -21,10 +21,11 @@ from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain.chains import RetrievalQA
+from langchain.chains import RetrievalQA, ConversationalRetrievalChain
 from langchain.prompts import PromptTemplate
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder, HumanMessagePromptTemplate
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from langchain.memory import ConversationBufferWindowMemory, ConversationSummaryBufferMemory
 
 # Local imports
 from database import get_db_connection
@@ -82,6 +83,74 @@ class BudgetWiseRAG:
     def __init__(self):
         self.vector_store = None
         self._load_vector_store()
+        # Store conversation memory per user session
+        self.conversation_memories = {}  # user_id -> memory object
+
+    # -------------------------------
+    # Conversation Memory Management
+    # -------------------------------
+    def _get_or_create_memory(self, user_id: int) -> ConversationBufferWindowMemory:
+        """
+        Get or create conversation memory for a user.
+        Uses ConversationBufferWindowMemory to keep last N exchanges.
+        
+        Args:
+            user_id: User ID for the conversation
+            
+        Returns:
+            ConversationBufferWindowMemory instance
+        """
+        if user_id not in self.conversation_memories:
+            logger.info(f"Creating new conversation memory for user {user_id}")
+            # Keep last 5 exchanges (10 messages) for context without overwhelming the prompt
+            self.conversation_memories[user_id] = ConversationBufferWindowMemory(
+                k=5,  # Number of exchanges to remember
+                memory_key="chat_history",
+                return_messages=True,
+                output_key="answer"
+            )
+        return self.conversation_memories[user_id]
+    
+    def clear_conversation_memory(self, user_id: int) -> bool:
+        """
+        Clear conversation memory for a specific user.
+        
+        Args:
+            user_id: User ID whose memory to clear
+            
+        Returns:
+            True if cleared, False if no memory existed
+        """
+        if user_id in self.conversation_memories:
+            logger.info(f"Clearing conversation memory for user {user_id}")
+            del self.conversation_memories[user_id]
+            return True
+        return False
+    
+    def get_conversation_history(self, user_id: int) -> List[Dict[str, str]]:
+        """
+        Get formatted conversation history for a user.
+        
+        Args:
+            user_id: User ID
+            
+        Returns:
+            List of conversation exchanges
+        """
+        if user_id not in self.conversation_memories:
+            return []
+        
+        memory = self.conversation_memories[user_id]
+        messages = memory.chat_memory.messages
+        
+        history = []
+        for msg in messages:
+            if isinstance(msg, HumanMessage):
+                history.append({"role": "user", "content": msg.content})
+            elif isinstance(msg, AIMessage):
+                history.append({"role": "assistant", "content": msg.content})
+        
+        return history
 
     # -------------------------------
     # Query relevance classification
@@ -569,7 +638,7 @@ class BudgetWiseRAG:
         
     def generate_answer(self, user_id: int, query: str, matches: List[Dict]) -> str:
         """
-        Generate an answer using retrieved matches and the Gemini model.
+        Generate an answer using retrieved matches, conversation memory, and the Gemini model.
         
         Args:
             user_id: User ID for context
@@ -585,6 +654,9 @@ class BudgetWiseRAG:
 
         if not matches:
             return "I couldn't find any relevant transactions to answer your question. Try rephrasing or ask about different transactions."
+        
+        # Get conversation memory for this user
+        memory = self._get_or_create_memory(user_id)
         
         # Format the transactions for the context
         formatted_transactions = []
@@ -602,7 +674,7 @@ class BudgetWiseRAG:
             
         context = "\n".join(formatted_transactions)
         
-        # Use RetrievalQA chain if vector store is available, otherwise use direct generation
+        # Use ConversationalRetrievalChain if vector store is available
         try:
             if self.vector_store is not None:
                 # Using metadata filter for user-specific context
@@ -610,75 +682,107 @@ class BudgetWiseRAG:
                     search_kwargs={"k": 12, "filter": {"user_id": str(user_id)}}  # Increased for richer context
                 )
                 
-                # Create an LLM for direct query
+                # Create an LLM for conversational query
                 llm = ChatGoogleGenerativeAI(
                     model=GEMINI_MODEL,
                     google_api_key=GEMINI_API_KEY,
                     temperature=0.4  # Increased for more natural responses
                 )
                 
-                # User-specific prompt
-                prompt_template = """
-                                You are a friendly personal finance assistant for BudgetWise.
-                                Answer naturally using ONLY the provided transaction data. Be conversational and helpful.
+                # Conversational prompt with memory context
+                condense_question_prompt = PromptTemplate(
+                    template="""Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question that includes relevant context from the conversation history.
 
-                                IMPORTANT SCOPE RULE:
-                                - If the question is outside personal finance, transactions, budgets, or spending/income insights,
-                                    respond EXACTLY with: """ + OOC_MESSAGE + """
-                                - Do not answer unrelated topics.
+Chat History:
+{chat_history}
+
+Follow Up Question: {question}
+Standalone question:""",
+                    input_variables=["chat_history", "question"]
+                )
                 
-                                Response guidelines:
-                                - Start with a direct, natural answer
-                                - Be conversational - like talking to a friend
-                                - Use specific numbers from the transactions
-                                - Bold important amounts like **$X.XX**
-                                - Share useful insights you notice
-                                - Keep it concise but informative (around 150-200 words)
-                                - If data is limited, say so naturally
+                # Main QA prompt with conversation awareness
+                qa_prompt_template = """
+You are a friendly personal finance assistant for BudgetWise with access to conversation history.
+Answer naturally using the provided transaction data and remember previous parts of our conversation.
+
+IMPORTANT SCOPE RULE:
+- If the question is outside personal finance, transactions, budgets, or spending/income insights,
+    respond EXACTLY with: """ + OOC_MESSAGE + """
+- Do not answer unrelated topics.
+
+Response guidelines:
+- Reference previous questions or answers when relevant (e.g., "As I mentioned earlier..." or "Compared to what we discussed...")
+- Start with a direct, natural answer
+- Be conversational - like talking to a friend who remembers what you discussed
+- Use specific numbers from the transactions
+- Bold important amounts like **$X.XX**
+- Share useful insights you notice
+- Keep it concise but informative (around 150-200 words)
+- If the user asks follow-up questions (like "what about dining?", "and last month?"), understand the context
+
+Context (Relevant Transactions):
+{context}
+
+Question: {question}
+Answer:"""
                 
-                                Transactions:
-                                {context}
-                
-                                Question: {question}
-                                Answer:
-                                """
-                
-                prompt = PromptTemplate(
-                    template=prompt_template,
+                qa_prompt = PromptTemplate(
+                    template=qa_prompt_template,
                     input_variables=["context", "question"]
                 )
                 
-                # Create chain
-                qa_chain = RetrievalQA.from_chain_type(
+                # Create conversational retrieval chain
+                qa_chain = ConversationalRetrievalChain.from_llm(
                     llm=llm,
-                    chain_type="stuff",
                     retriever=filtered_retriever,
+                    memory=memory,
+                    condense_question_prompt=condense_question_prompt,
+                    combine_docs_chain_kwargs={"prompt": qa_prompt},
                     return_source_documents=False,
-                    chain_type_kwargs={"prompt": prompt}
+                    verbose=False
                 )
                 
-                # Run the chain
-                result = qa_chain.invoke({"query": query})
-                return result.get("result", "I couldn't generate a proper answer. Please try again.")
+                # Run the chain with memory
+                result = qa_chain({"question": query})
+                answer = result.get("answer", "I couldn't generate a proper answer. Please try again.")
+                
+                logger.info(f"Generated answer with memory for user {user_id}, history length: {len(memory.chat_memory.messages)}")
+                return answer
             else:
-                # Fallback to direct LLM if no vector store
+                # Fallback to direct LLM with manual memory if no vector store
                 llm = ChatGoogleGenerativeAI(
                     model=GEMINI_MODEL,
                     google_api_key=GEMINI_API_KEY,
                     temperature=0.4  # Increased for more natural responses
                 )
                 
+                # Get conversation history
+                history_messages = memory.chat_memory.messages if memory else []
+                
                 messages = [
                     SystemMessage(content=(
-                        "You are a friendly personal finance assistant. Answer naturally based only on the provided transactions. "
+                        "You are a friendly personal finance assistant with conversation memory. "
+                        "Answer naturally based only on the provided transactions and conversation history. "
                         "Be conversational and helpful. Use specific numbers and dates. Bold important amounts. "
+                        "Reference previous conversation when relevant. "
                         "If the question is outside personal finance/transactions/budgets, respond EXACTLY with: " + OOC_MESSAGE
-                    )),
-                    HumanMessage(content=f"My question is: {query}\n\nHere are my relevant transactions:\n{context}")
+                    ))
                 ]
                 
+                # Add conversation history
+                messages.extend(history_messages)
+                
+                # Add current query with context
+                messages.append(HumanMessage(content=f"My question is: {query}\n\nHere are my relevant transactions:\n{context}"))
+                
                 response = llm.invoke(messages)
-                return response.content
+                answer = response.content
+                
+                # Manually save to memory
+                memory.save_context({"question": query}, {"answer": answer})
+                
+                return answer
                 
         except Exception as e:
             logger.error(f"Error generating answer: {e}")

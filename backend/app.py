@@ -20,7 +20,14 @@ if not logger.handlers:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 app = Flask(__name__)
-CORS(app)
+# Configure CORS with explicit settings to handle preflight requests
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # JWT Configuration from config module
 app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
@@ -282,6 +289,57 @@ def langchain_rag_stats():
         logger.exception("Failed to get index statistics")
         return jsonify({
             "message": "Failed to get index statistics",
+            "error": str(e)
+        }), 500
+
+# --- LangChain: Clear conversation memory ---
+@app.route("/chatbot/langchain/clear-memory", methods=["POST"])
+@jwt_required()
+def langchain_clear_memory():
+    """Clear conversation memory for the current user."""
+    current_user_id = int(get_jwt_identity())
+    
+    try:
+        cleared = langchain_rag.rag_service.clear_conversation_memory(current_user_id)
+        logger.info(f"Conversation memory clear request user_id={current_user_id} cleared={cleared}")
+        
+        if cleared:
+            return jsonify({
+                "message": "Conversation memory cleared successfully",
+                "cleared": True
+            }), 200
+        else:
+            return jsonify({
+                "message": "No conversation memory to clear",
+                "cleared": False
+            }), 200
+    except Exception as e:
+        logger.exception(f"Failed to clear conversation memory for user_id={current_user_id}")
+        return jsonify({
+            "message": "Failed to clear conversation memory",
+            "error": str(e)
+        }), 500
+
+
+# --- LangChain: Get conversation history ---
+@app.route("/chatbot/langchain/history", methods=["GET"])
+@jwt_required()
+def langchain_get_history():
+    """Get conversation history for the current user."""
+    current_user_id = int(get_jwt_identity())
+    
+    try:
+        history = langchain_rag.rag_service.get_conversation_history(current_user_id)
+        logger.info(f"Conversation history request user_id={current_user_id} messages={len(history)}")
+        
+        return jsonify({
+            "history": history,
+            "message_count": len(history)
+        }), 200
+    except Exception as e:
+        logger.exception(f"Failed to get conversation history for user_id={current_user_id}")
+        return jsonify({
+            "message": "Failed to get conversation history",
             "error": str(e)
         }), 500
 
