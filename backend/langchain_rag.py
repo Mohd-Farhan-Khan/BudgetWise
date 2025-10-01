@@ -497,32 +497,36 @@ class BudgetWiseRAG:
             return None
 
         prompt_template = """
-                You are a helpful personal finance assistant for the BudgetWise app.
-                Answer using ONLY the provided transaction context. If the data is insufficient, say so briefly and suggest what to build or filter next.
+                You are a friendly and helpful personal finance assistant for BudgetWise.
+                Answer questions naturally using ONLY the provided transaction data. Be conversational and direct.
 
                 IMPORTANT SCOPE RULE:
-                - If the user's question is outside personal finance, transactions, budgets, or insights about their spending/income,
+                - If the question is outside personal finance, transactions, budgets, or spending/income insights,
                     respond EXACTLY with: """ + OOC_MESSAGE + """
                 - Do not answer general knowledge or unrelated questions.
             
-                Output format requirements (use Markdown):
-                - Start with a concise one-line answer.
-                - Then add sections with headings like: Summary, Breakdown, Insights, and Next steps.
-                - Use bullet points, bold totals (e.g., **$123.45**), and short, scannable sentences.
-                - Keep numbers consistent to 2 decimals for currency.
-                - Do not invent data that's not in context.
+                Response guidelines:
+                - Start with a direct answer to their question
+                - Be conversational and natural - write like you're talking to a friend
+                - Use specific numbers and dates from the transactions
+                - Highlight important amounts in bold (e.g., **$123.45**)
+                - Group information logically but don't force strict sections
+                - Add helpful insights or patterns you notice
+                - Keep currency values to 2 decimals
+                - If data is limited, say so naturally and suggest what might help
+                - Do not invent or assume data not in the context
             
-                When analyzing:
-                1. For sums, calculate totals accurately.
-                2. For trends, note patterns across dates or categories.
-                3. For category questions, group and summarize by category.
-                4. For time-based questions, organize chronologically.
+                Analysis approach:
+                - For spending questions: Sum amounts and highlight categories
+                - For trends: Note patterns over time naturally
+                - For comparisons: Show the differences clearly
+                - For category questions: Group and provide totals
             
                 Context:
                 {context}
             
                 Question: {question}
-                Answer (Markdown):
+                Answer:
                 """
 
         prompt = PromptTemplate(
@@ -533,7 +537,7 @@ class BudgetWiseRAG:
         llm = ChatGoogleGenerativeAI(
             model=GEMINI_MODEL,
             google_api_key=GEMINI_API_KEY,
-            temperature=0.2,
+            temperature=0.4,  # Increased for more natural, conversational responses
             convert_system_message_to_human=True,
             safety_settings=[
                 {
@@ -558,7 +562,7 @@ class BudgetWiseRAG:
         return RetrievalQA.from_chain_type(
             llm=llm,
             chain_type="stuff",
-            retriever=self.vector_store.as_retriever(search_kwargs={"k": 5}),
+            retriever=self.vector_store.as_retriever(search_kwargs={"k": 8}),  # Increased to 8 for better context
             return_source_documents=True,
             chain_type_kwargs={"prompt": prompt}
         )
@@ -603,37 +607,40 @@ class BudgetWiseRAG:
             if self.vector_store is not None:
                 # Using metadata filter for user-specific context
                 filtered_retriever = self.vector_store.as_retriever(
-                    search_kwargs={"k": 10, "filter": {"user_id": str(user_id)}}
+                    search_kwargs={"k": 12, "filter": {"user_id": str(user_id)}}  # Increased for richer context
                 )
                 
                 # Create an LLM for direct query
                 llm = ChatGoogleGenerativeAI(
                     model=GEMINI_MODEL,
                     google_api_key=GEMINI_API_KEY,
-                    temperature=0.2
+                    temperature=0.4  # Increased for more natural responses
                 )
                 
                 # User-specific prompt
                 prompt_template = """
-                                You are analyzing financial data for a specific user in BudgetWise.
-                                Use ONLY the provided transactions. If uncertain, say so and suggest a follow-up.
+                                You are a friendly personal finance assistant for BudgetWise.
+                                Answer naturally using ONLY the provided transaction data. Be conversational and helpful.
 
                                 IMPORTANT SCOPE RULE:
-                                - If the user's question is outside personal finance, transactions, budgets, or insights about their spending/income,
+                                - If the question is outside personal finance, transactions, budgets, or spending/income insights,
                                     respond EXACTLY with: """ + OOC_MESSAGE + """
                                 - Do not answer unrelated topics.
                 
-                                Format your response in Markdown:
-                                - First line: direct answer (one sentence)
-                                - Headings: Summary, Breakdown, Insights, Next steps
-                                - Use bullet points and bold currency figures like **$X.XX**
-                                - Keep it under ~180 words unless totals/trends require more
+                                Response guidelines:
+                                - Start with a direct, natural answer
+                                - Be conversational - like talking to a friend
+                                - Use specific numbers from the transactions
+                                - Bold important amounts like **$X.XX**
+                                - Share useful insights you notice
+                                - Keep it concise but informative (around 150-200 words)
+                                - If data is limited, say so naturally
                 
                                 Transactions:
                                 {context}
                 
                                 Question: {question}
-                                Answer (Markdown):
+                                Answer:
                                 """
                 
                 prompt = PromptTemplate(
@@ -658,12 +665,13 @@ class BudgetWiseRAG:
                 llm = ChatGoogleGenerativeAI(
                     model=GEMINI_MODEL,
                     google_api_key=GEMINI_API_KEY,
-                    temperature=0.2
+                    temperature=0.4  # Increased for more natural responses
                 )
                 
                 messages = [
                     SystemMessage(content=(
-                        "You are a helpful personal finance assistant. Answer based only on the provided transactions. "
+                        "You are a friendly personal finance assistant. Answer naturally based only on the provided transactions. "
+                        "Be conversational and helpful. Use specific numbers and dates. Bold important amounts. "
                         "If the question is outside personal finance/transactions/budgets, respond EXACTLY with: " + OOC_MESSAGE
                     )),
                     HumanMessage(content=f"My question is: {query}\n\nHere are my relevant transactions:\n{context}")

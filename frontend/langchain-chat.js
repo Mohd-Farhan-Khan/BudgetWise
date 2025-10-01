@@ -234,18 +234,14 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
         throw new Error(data.message || data.error || `Query failed (${res.status})`);
       }
 
-      // Process matches if they exist
-      const matchesText = (data.matches || []).map(m => {
-        try {
-          return `- ${m.date} ${m.type} ${m.category} $${Number(m.amount).toFixed(2)}  (score: ${m.score?.toFixed?.(3) ?? m.score})`;
-        } catch (err) {
-          console.error("Error formatting match:", err, m);
-          return `- Error formatting match data`;
-        }
-      }).join('\n');
+      // Display the natural language answer
+      const answer = data.answer || 'I couldn\'t generate an answer. Please try rephrasing your question.';
+      addMsg('bot', answer);
       
-      const debugBlock = matchesText ? `\n\nMatches:\n${matchesText}` : '\n\nNo matches found.';
-      addMsg('bot', `${data.answer || 'No answer.'}${debugBlock}`);
+      // Log matches for debugging (but don't display them)
+      if (data.matches && data.matches.length > 0) {
+        console.log(`Found ${data.matches.length} relevant transactions:`, data.matches);
+      }
     } catch (e) {
       console.error("LangChain query error:", e);
       addMsg('bot', `Error: ${e.message}. Check the browser console for details.`);
