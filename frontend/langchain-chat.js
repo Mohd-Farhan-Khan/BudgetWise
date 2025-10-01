@@ -11,14 +11,14 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
   console.log("LangChain RAG Chat script loaded");
 
   // Find UI elements with fallbacks for both regular and langchain-specific selectors
-  const $messages = document.getElementById('langchain-chat-messages') || 
-                   document.getElementById('chat-messages');
-  const $form = document.getElementById('langchain-chat-form') || 
-               document.getElementById('chat-form');
-  const $input = document.getElementById('langchain-chat-text') || 
-                document.getElementById('chat-text');
-  const $buildBtn = document.getElementById('langchain-build-index') || 
-                   document.getElementById('build-index');
+  const $messages = document.getElementById('langchain-chat-messages') ||
+    document.getElementById('chat-messages');
+  const $form = document.getElementById('langchain-chat-form') ||
+    document.getElementById('chat-form');
+  const $input = document.getElementById('langchain-chat-text') ||
+    document.getElementById('chat-text');
+  const $buildBtn = document.getElementById('langchain-build-index') ||
+    document.getElementById('build-index');
 
   // Debug elements
   console.log("LangChain Chat elements:", { messages: $messages, form: $form, input: $input, buildBtn: $buildBtn });
@@ -69,7 +69,7 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
   function addMsg(role, text, opts = { markdown: true }) {
     const wrap = document.createElement('div');
     wrap.className = `msg ${role}`;
-    const content = opts.markdown ? renderMarkdown(text) : text.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const content = opts.markdown ? renderMarkdown(text) : text.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
     wrap.innerHTML = `<div class="bubble">${content}</div>`;
     $messages.appendChild(wrap);
     $messages.scrollTop = $messages.scrollHeight;
@@ -88,7 +88,7 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
   async function buildIndex() {
     console.log("Building LangChain index...");
     addMsg('bot', 'Building LangChain index... This may take a moment.');
-    
+
     try {
       const res = await fetch(`${LANGCHAIN_API_BASE}/chatbot/langchain/build`, {
         method: 'POST',
@@ -98,11 +98,11 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
         },
         body: JSON.stringify({ reindex: true })
       });
-      
+
       console.log("LangChain build index response status:", res.status);
       const data = await res.json();
       console.log("LangChain build index response data:", data);
-      
+
       if (!res.ok) {
         const errMsg = data?.error || data?.message || `LangChain index build failed (${res.status})`;
         console.error("LangChain build detailed error:", { status: res.status, body: data });
@@ -111,9 +111,9 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
         }
         throw new Error(errMsg);
       }
-      
+
       addMsg('bot', `Success! LangChain index built with ${data.indexed ?? 'N/A'} items. You can now ask more nuanced questions about your finances.`);
-      
+
       // Also fetch and display stats
       await fetchIndexStats();
     } catch (e) {
@@ -121,7 +121,7 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
       addMsg('bot', `Index error: ${e.message}. If this is a rate limit (429), wait and retry.`);
     }
   }
-  
+
   // Fetch LangChain index stats
   async function fetchIndexStats() {
     try {
@@ -130,18 +130,18 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
           'Authorization': `Bearer ${token()}`
         }
       });
-      
+
       if (!res.ok) return;
-      
+
       const stats = await res.json();
       console.log("LangChain index stats:", stats);
-      
+
       // If we have enough stats, show a summary
       if (stats.total_documents > 0) {
         const userCount = Object.keys(stats.users || {}).length;
         const categories = Object.keys(stats.categories || {}).length;
-        
-        addMsg('bot', 
+
+        addMsg('bot',
           `Index statistics:\n` +
           `- ${stats.total_documents} total transactions indexed\n` +
           `- ${userCount} users in index\n` +
@@ -174,15 +174,15 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
   });
 
   // Find the ask button
-  const $askBtn = document.getElementById('langchain-ask-btn') || 
-                 document.getElementById('ask-btn');
+  const $askBtn = document.getElementById('langchain-ask-btn') ||
+    document.getElementById('ask-btn');
 
   // Check if ask button exists
   if (!$askBtn) {
     console.error("Ask button not found!");
   } else {
     console.log("Ask button found, adding handler");
-    
+
     // Handle ask button click
     $askBtn.addEventListener('click', handleQuery);
   }
@@ -194,10 +194,10 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
       e.preventDefault();
       console.log("Clear memory button clicked");
       if (!checkAuth()) return;
-      
+
       try {
         addMsg('bot', 'Clearing conversation history...');
-        
+
         const res = await fetch(`${LANGCHAIN_API_BASE}/chatbot/langchain/clear-memory`, {
           method: 'POST',
           headers: {
@@ -205,10 +205,10 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
             'Content-Type': 'application/json'
           }
         });
-        
+
         const data = await res.json();
         console.log("Clear memory response:", data);
-        
+
         if (res.ok) {
           addMsg('bot', '🔄 Conversation history cleared! I\'ll start fresh from here. Feel free to ask me anything about your finances!');
         } else {
@@ -236,20 +236,20 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
   async function handleQuery() {
     console.log("LangChain Ask button clicked");
     if (!checkAuth()) return;
-    
+
     const q = $input.value.trim();
     if (!q) {
       console.log("Empty query, not sending");
       return;
     }
-    
+
     addMsg('user', q);
     $input.value = '';
 
     try {
       console.log("Sending query to LangChain API:", q);
-  const typingEl = showTyping();
-      
+      const typingEl = showTyping();
+
       const res = await fetch(`${LANGCHAIN_API_BASE}/chatbot/langchain/query`, {
         method: 'POST',
         headers: {
@@ -258,11 +258,11 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
         },
         body: JSON.stringify({ query: q, top_k: 8 })
       });
-      
+
       console.log("LangChain API response status:", res.status);
       const data = await res.json();
       console.log("LangChain API response data:", data);
-      
+
       // Remove typing indicator
       typingEl?.remove();
 
@@ -274,7 +274,7 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
       // Display the natural language answer
       const answer = data.answer || 'I couldn\'t generate an answer. Please try rephrasing your question.';
       addMsg('bot', answer);
-      
+
       // Log matches for debugging (but don't display them)
       if (data.matches && data.matches.length > 0) {
         console.log(`Found ${data.matches.length} relevant transactions:`, data.matches);

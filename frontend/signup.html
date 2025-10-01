@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,12 +8,14 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
   <div class="auth-container">
     <div class="auth-image">
       <div class="auth-image-content">
         <h2>Join BudgetWise Today</h2>
-        <p>Create an account and start your journey to financial wellness with our easy-to-use personal finance tracker.</p>
+        <p>Create an account and start your journey to financial wellness with our easy-to-use personal finance tracker.
+        </p>
         <ul class="auth-features">
           <li>Set up in just 30 seconds</li>
           <li>Secure and private</li>
@@ -21,28 +24,28 @@
         </ul>
       </div>
     </div>
-    
+
     <div class="auth-form">
       <div class="auth-form-container">
         <div class="auth-logo">
           <h1>BudgetWise</h1>
         </div>
-        
+
         <h2 class="form-title">Create your account</h2>
-        
+
         <div id="error-message" class="error-message"></div>
-        
+
         <form id="signup-form">
           <div class="input-group">
             <input type="text" id="username" name="username" placeholder=" " required>
             <label for="username">Username</label>
           </div>
-          
+
           <div class="input-group">
             <input type="email" id="email" name="email" placeholder=" " required>
             <label for="email">Email</label>
           </div>
-          
+
           <div class="input-group">
             <input type="password" id="password" name="password" placeholder=" " required>
             <label for="password">Password</label>
@@ -50,7 +53,7 @@
               <i class="fa fa-eye-slash"></i>
             </button>
           </div>
-          
+
           <div class="input-group">
             <input type="password" id="confirm-password" name="confirm-password" placeholder=" " required>
             <label for="confirm-password">Confirm Password</label>
@@ -58,80 +61,80 @@
               <i class="fa fa-eye-slash"></i>
             </button>
           </div>
-          
+
           <button type="submit">Create Account</button>
         </form>
-        
+
         <p class="auth-redirect">Already have an account? <a href="login.html">Log in</a></p>
       </div>
     </div>
   </div>
 
   <script>
-  const API_BASE = "http://127.0.0.1:5001"; // updated port
-    
-  // Password visibility toggle functions
-  function setupPasswordToggle(inputId, toggleId) {
-    document.getElementById(toggleId).addEventListener('click', function() {
-      const passwordInput = document.getElementById(inputId);
-      const icon = this.querySelector('i');
-      
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-      } else {
-        passwordInput.type = 'password';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      }
-    });
-  }
-  
-  // Set up password toggles
-  setupPasswordToggle('password', 'password-toggle');
-  setupPasswordToggle('confirm-password', 'confirm-password-toggle');
-  
-  document.getElementById('signup-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
-    const errorMessage = document.getElementById('error-message');
-    
-    // Clear previous error
-    errorMessage.classList.remove('visible');
-    
-    // Client-side validation
-    if (password !== confirmPassword) {
-      errorMessage.textContent = "Passwords do not match";
-      errorMessage.classList.add('visible');
-      return;
-    }
-    
-    if (password.length < 6) {
-      errorMessage.textContent = "Password must be at least 6 characters";
-      errorMessage.classList.add('visible');
-      return;
-    }
-    
-    try {
-      const response = await fetch(`${API_BASE}/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, email, password })
+    const API_BASE = "http://127.0.0.1:5001"; // updated port
+
+    // Password visibility toggle functions
+    function setupPasswordToggle(inputId, toggleId) {
+      document.getElementById(toggleId).addEventListener('click', function () {
+        const passwordInput = document.getElementById(inputId);
+        const icon = this.querySelector('i');
+
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        } else {
+          passwordInput.type = 'password';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        }
       });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Show success message with animation
-        const formContainer = document.querySelector('.auth-form-container');
-        formContainer.innerHTML = `
+    }
+
+    // Set up password toggles
+    setupPasswordToggle('password', 'password-toggle');
+    setupPasswordToggle('confirm-password', 'confirm-password-toggle');
+
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const errorMessage = document.getElementById('error-message');
+
+      // Clear previous error
+      errorMessage.classList.remove('visible');
+
+      // Client-side validation
+      if (password !== confirmPassword) {
+        errorMessage.textContent = "Passwords do not match";
+        errorMessage.classList.add('visible');
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMessage.textContent = "Password must be at least 6 characters";
+        errorMessage.classList.add('visible');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Show success message with animation
+          const formContainer = document.querySelector('.auth-form-container');
+          formContainer.innerHTML = `
           <div class="auth-logo">
             <h1>BudgetWise</h1>
           </div>
@@ -142,16 +145,17 @@
             <a href="login.html" style="background-color: #4caf50; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; display: inline-block;">Log in</a>
           </div>
         `;
-      } else {
-        errorMessage.textContent = data.message || "Error creating account";
+        } else {
+          errorMessage.textContent = data.message || "Error creating account";
+          errorMessage.classList.add('visible');
+        }
+      } catch (err) {
+        errorMessage.textContent = "Server error. Please try again later.";
         errorMessage.classList.add('visible');
+        console.error(err);
       }
-    } catch (err) {
-      errorMessage.textContent = "Server error. Please try again later.";
-      errorMessage.classList.add('visible');
-      console.error(err);
-    }
-  });
+    });
   </script>
 </body>
+
 </html>

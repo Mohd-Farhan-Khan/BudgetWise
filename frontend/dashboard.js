@@ -23,39 +23,39 @@ function initializeDashboard() {
   const currentDate = new Date();
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   document.getElementById('current-date').textContent = currentDate.toLocaleDateString('en-US', options);
-  
+
   // Mobile menu toggle
   const sidebarToggleBtn = document.createElement('button');
   sidebarToggleBtn.className = 'mobile-menu-toggle';
   sidebarToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
   document.querySelector('.dashboard-header').prepend(sidebarToggleBtn);
-  
+
   // Create overlay for mobile menu
   const overlay = document.createElement('div');
   overlay.className = 'sidebar-overlay';
   document.querySelector('.dashboard-container').appendChild(overlay);
-  
+
   // Add event listeners for mobile menu
   sidebarToggleBtn.addEventListener('click', () => {
     document.querySelector('.sidebar').classList.toggle('active');
     overlay.classList.toggle('active');
   });
-  
+
   overlay.addEventListener('click', () => {
     document.querySelector('.sidebar').classList.remove('active');
     overlay.classList.remove('active');
   });
-  
+
   // Initialize filter for transactions
-  document.getElementById('filter-transactions').addEventListener('input', function() {
+  document.getElementById('filter-transactions').addEventListener('input', function () {
     const filterText = this.value.toLowerCase();
     const transactions = document.querySelectorAll('#expenseList li');
-    
+
     transactions.forEach(transaction => {
       const category = transaction.querySelector('.col-category').textContent.toLowerCase();
       const note = transaction.querySelector('.col-note').textContent.toLowerCase();
       const date = transaction.querySelector('.col-date').textContent.toLowerCase();
-      
+
       if (category.includes(filterText) || note.includes(filterText) || date.includes(filterText)) {
         transaction.style.display = '';
       } else {
@@ -63,38 +63,38 @@ function initializeDashboard() {
       }
     });
   });
-  
+
   // Period selector for charts
-  document.getElementById('chart-period').addEventListener('change', function() {
+  document.getElementById('chart-period').addEventListener('change', function () {
     // Reload expenses with period filter
     loadExpenses();
   });
-  
-    // Menu item click handlers
+
+  // Menu item click handlers
   document.querySelectorAll('.sidebar-menu a').forEach(menuItem => {
-    menuItem.addEventListener('click', function(e) {
+    menuItem.addEventListener('click', function (e) {
       e.preventDefault();
-      
+
       // Update active state
       document.querySelectorAll('.sidebar-menu li').forEach(item => {
         item.classList.remove('active');
       });
       this.parentElement.classList.add('active');
-      
+
       // Get the section ID from href
       const sectionId = this.getAttribute('href').substring(1);
-      
+
       // Show all sections by default (for dashboard view)
       document.querySelectorAll('.dashboard-content > section, .dashboard-grid > section').forEach(section => {
         section.style.display = '';
       });
-      
+
       // Handle different section navigations
       if (sectionId === 'dashboard') {
         // Dashboard: show welcome banner, summary, and charts
         document.querySelector('.summary-section').style.display = '';
         document.querySelector('.dashboard-grid').style.display = '';
-        
+
         // Scroll to top
         document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
       } else if (sectionId === 'transactions') {
@@ -128,15 +128,15 @@ function initializeDashboard() {
           document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
-      
+
       // Close mobile menu if open
       document.querySelector('.sidebar').classList.remove('active');
       document.querySelector('.sidebar-overlay').classList.remove('active');
     });
   });
-  
+
   // Initialize Load More button
-  document.getElementById('load-more').addEventListener('click', function() {
+  document.getElementById('load-more').addEventListener('click', function () {
     // This would fetch more transactions in a real implementation
     this.textContent = 'No more transactions';
     this.disabled = true;
@@ -172,14 +172,14 @@ function logout() {
 // Add event listener to expense form
 document.getElementById("expenseForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  
+
   if (!checkAuth()) return;
-  
+
   const submitButton = e.target.querySelector('button[type="submit"]');
   const originalText = submitButton.innerHTML;
   submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
   submitButton.disabled = true;
-  
+
   const date = document.getElementById("date").value;
   const category = document.getElementById("category").value;
   const note = document.getElementById("note").value;
@@ -189,25 +189,25 @@ document.getElementById("expenseForm").addEventListener("submit", async (e) => {
   try {
     const res = await fetch(`${API_BASE}/add_expense`, {
       method: "POST",
-      headers: { 
+      headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem('token')}`
       },
       body: JSON.stringify({ date, category, note, amount, type })
     });
-    
+
     if (res.status === 401) {
       alert("Your session has expired. Please login again.");
       logout();
       return;
     }
-    
+
     // Attempt to parse JSON if possible
     let payloadText = null;
     let data = null;
     const contentType = res.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {
-      try { data = await res.json(); } catch (_) {}
+      try { data = await res.json(); } catch (_) { }
     } else {
       payloadText = await res.text();
     }
@@ -225,13 +225,13 @@ document.getElementById("expenseForm").addEventListener("submit", async (e) => {
 
     // Show success notification
     showNotification((data && (data.message || data.msg)) || "Transaction added successfully");
-    
+
     document.getElementById("expenseForm").reset();
-    
+
     // Set default date to today again after form reset
     const today = new Date().toISOString().split('T')[0];
     document.getElementById("date").value = today;
-    
+
     loadExpenses();
   } catch (err) {
     console.error("Error adding expense:", err);
@@ -253,9 +253,9 @@ function showNotification(message) {
     </div>
     <button class="notification-close"><i class="fas fa-times"></i></button>
   `;
-  
+
   document.body.appendChild(notification);
-  
+
   // Add styles for notification
   const style = document.createElement('style');
   style.textContent = `
@@ -301,7 +301,7 @@ function showNotification(message) {
     }
   `;
   document.head.appendChild(style);
-  
+
   // Close button handler
   notification.querySelector('.notification-close').addEventListener('click', () => {
     notification.style.animation = 'slideOut 0.3s forwards';
@@ -309,7 +309,7 @@ function showNotification(message) {
       notification.remove();
     }, 300);
   });
-  
+
   // Auto-close after 5 seconds
   setTimeout(() => {
     if (document.body.contains(notification)) {
@@ -324,7 +324,7 @@ function showNotification(message) {
 // Load expenses for the authenticated user
 async function loadExpenses() {
   if (!checkAuth()) return;
-  
+
   try {
     // Show loading state
     const expenseList = document.getElementById("expenseList");
@@ -333,25 +333,25 @@ async function loadExpenses() {
         <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #757575;"></i>
       </li>
     `;
-    
+
     const res = await fetch(`${API_BASE}/expenses`, {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem('token')}`
       }
     });
-    
+
     if (res.status === 401) {
       alert("Your session has expired. Please login again.");
       logout();
       return;
     }
-    
+
     if (!res.ok) {
       let errMsg = "Unable to load expenses";
       try {
         const errData = await res.json();
         errMsg = errData.message || errData.error || errData.msg || errMsg;
-      } catch (_) {}
+      } catch (_) { }
       if (res.status === 422 && /Subject must be a string/i.test(errMsg)) {
         alert('Session is invalid (token format). Please login again.');
         logout();
@@ -367,7 +367,7 @@ async function loadExpenses() {
 
     const expenses = await res.json();
     expenseList.innerHTML = "";
-    
+
     if (expenses.length === 0) {
       expenseList.innerHTML = `
         <li style="text-align: center; padding: 30px; color: #757575;">
@@ -375,28 +375,28 @@ async function loadExpenses() {
           No transactions found. Add your first transaction!
         </li>
       `;
-      
+
       // Reset summary cards
       document.getElementById("total-income").textContent = "$0.00";
       document.getElementById("total-expense").textContent = "$0.00";
       document.getElementById("balance").textContent = "$0.00";
-      
+
       // Show empty state charts
       updateCharts([]);
       return;
     }
-    
+
     let totalExpense = 0;
     let totalIncome = 0;
-    
+
     // Apply period filter if set
     const period = document.getElementById('chart-period').value;
     let filteredExpenses = expenses;
-    
+
     if (period !== 'all') {
       const now = new Date();
       const startDate = new Date();
-      
+
       if (period === 'month') {
         startDate.setMonth(now.getMonth() - 1);
       } else if (period === 'quarter') {
@@ -404,13 +404,13 @@ async function loadExpenses() {
       } else if (period === 'year') {
         startDate.setFullYear(now.getFullYear() - 1);
       }
-      
+
       filteredExpenses = expenses.filter(exp => {
         const expDate = new Date(exp.date);
         return expDate >= startDate;
       });
     }
-    
+
     // Process all expenses for totals (not just filtered ones)
     expenses.forEach(exp => {
       if (exp.type === 'Income') {
@@ -418,12 +418,12 @@ async function loadExpenses() {
       } else {
         totalExpense += parseFloat(exp.amount);
       }
-      
+
       const li = document.createElement("li");
       li.className = exp.type.toLowerCase();
-      
+
       const formattedDate = new Date(exp.date).toLocaleDateString();
-      
+
       li.innerHTML = `
         <span class="col-date">${formattedDate}</span>
         <span class="col-category">${exp.category || 'Uncategorized'}</span>
@@ -432,15 +432,15 @@ async function loadExpenses() {
       `;
       expenseList.appendChild(li);
     });
-    
+
     // Update summary
     document.getElementById("total-expense").textContent = `$${totalExpense.toFixed(2)}`;
     document.getElementById("total-income").textContent = `$${totalIncome.toFixed(2)}`;
     document.getElementById("balance").textContent = `$${(totalIncome - totalExpense).toFixed(2)}`;
-    
+
     // Update charts with filtered expenses data
     updateCharts(filteredExpenses);
-    
+
     // If we have more than 20 transactions, enable load more button
     if (expenses.length > 20) {
       document.getElementById('load-more').disabled = false;
@@ -462,7 +462,7 @@ async function loadExpenses() {
 // Setup user info in the dashboard
 function setupUserInfo() {
   if (!checkAuth()) return;
-  
+
   const user = getUser();
   document.getElementById("username-display").textContent = user.username;
   document.getElementById("username-display2").textContent = user.username;
@@ -474,7 +474,7 @@ window.addEventListener('load', () => {
   setupUserInfo();
   initializeDashboard();
   loadExpenses();
-  
+
   // Set default date to today
   const today = new Date().toISOString().split('T')[0];
   document.getElementById("date").value = today;
@@ -492,18 +492,18 @@ function renderIncomeExpenseChart(expenses) {
   const totalIncome = expenses
     .filter(exp => exp.type === 'Income')
     .reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
-  
+
   const totalExpense = expenses
     .filter(exp => exp.type === 'Expense')
     .reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
-  
+
   const ctx = document.getElementById('income-expense-chart').getContext('2d');
-  
+
   // Destroy previous chart instance if it exists
   if (incomeExpenseChart) {
     incomeExpenseChart.destroy();
   }
-  
+
   incomeExpenseChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
@@ -524,7 +524,7 @@ function renderIncomeExpenseChart(expenses) {
         },
         tooltip: {
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               const label = context.label || '';
               const value = context.raw || 0;
               return `${label}: $${value.toFixed(2)}`;
@@ -540,7 +540,7 @@ function renderIncomeExpenseChart(expenses) {
 function renderExpenseCategoriesChart(expenses) {
   // Only process expense transactions
   const expenseOnly = expenses.filter(exp => exp.type === 'Expense');
-  
+
   // Group by category and sum amounts
   const categories = {};
   expenseOnly.forEach(exp => {
@@ -550,34 +550,34 @@ function renderExpenseCategoriesChart(expenses) {
     }
     categories[category] += parseFloat(exp.amount);
   });
-  
+
   // Sort categories by amount (descending)
   const sortedCategories = Object.entries(categories)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5); // Limit to top 5 categories
-  
+
   const categoryLabels = sortedCategories.map(item => item[0]);
   const categoryAmounts = sortedCategories.map(item => item[1]);
-  
+
   // Generate colors
   const backgroundColors = [
     '#ff7043', '#5c6bc0', '#26a69a', '#ec407a', '#ab47bc',
     '#7e57c2', '#66bb6a', '#ffa726', '#78909c', '#42a5f5'
   ];
-  
+
   const ctx = document.getElementById('expense-categories-chart').getContext('2d');
-  
+
   // Destroy previous chart instance if it exists
   if (expenseCategoriesChart) {
     expenseCategoriesChart.destroy();
   }
-  
+
   // Check if we have any data
   if (categoryLabels.length === 0) {
     // Show empty state
     categoryLabels.push('No Data');
     categoryAmounts.push(1);
-    
+
     expenseCategoriesChart = new Chart(ctx, {
       type: 'pie',
       data: {
@@ -603,7 +603,7 @@ function renderExpenseCategoriesChart(expenses) {
     });
     return;
   }
-  
+
   expenseCategoriesChart = new Chart(ctx, {
     type: 'pie',
     data: {
@@ -626,7 +626,7 @@ function renderExpenseCategoriesChart(expenses) {
         },
         tooltip: {
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               const label = context.label || '';
               const value = context.raw || 0;
               const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -644,42 +644,42 @@ function renderExpenseCategoriesChart(expenses) {
 function renderMonthlyTrendChart(expenses) {
   // Group transactions by month
   const monthlyData = {};
-  
+
   expenses.forEach(exp => {
     const date = new Date(exp.date);
     const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    
+
     if (!monthlyData[monthYear]) {
       monthlyData[monthYear] = { income: 0, expense: 0 };
     }
-    
+
     if (exp.type === 'Income') {
       monthlyData[monthYear].income += parseFloat(exp.amount);
     } else {
       monthlyData[monthYear].expense += parseFloat(exp.amount);
     }
   });
-  
+
   // Sort months chronologically
   const sortedMonths = Object.keys(monthlyData).sort();
-  
+
   // Format labels to show month names
   const monthLabels = sortedMonths.map(monthYear => {
     const [year, month] = monthYear.split('-');
     const date = new Date(parseInt(year), parseInt(month) - 1, 1);
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   });
-  
+
   const incomeData = sortedMonths.map(month => monthlyData[month].income);
   const expenseData = sortedMonths.map(month => monthlyData[month].expense);
-  
+
   const ctx = document.getElementById('monthly-trend-chart').getContext('2d');
-  
+
   // Destroy previous chart instance if it exists
   if (monthlyTrendChart) {
     monthlyTrendChart.destroy();
   }
-  
+
   // Check if we have any data
   if (monthLabels.length === 0) {
     // Show empty state
@@ -727,7 +727,7 @@ function renderMonthlyTrendChart(expenses) {
     });
     return;
   }
-  
+
   monthlyTrendChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -768,7 +768,7 @@ function renderMonthlyTrendChart(expenses) {
         },
         tooltip: {
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               const label = context.dataset.label || '';
               const value = context.raw || 0;
               return `${label}: $${value.toFixed(2)}`;
