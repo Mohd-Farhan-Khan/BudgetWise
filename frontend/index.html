@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>BudgetWise Dashboard</title>
   <meta charset="utf-8">
@@ -10,6 +11,7 @@
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body class="dashboard-body">
   <div class="dashboard-container">
     <nav class="sidebar">
@@ -48,7 +50,7 @@
       </header>
 
       <div class="dashboard-content">
-        <section class="welcome-banner">
+        <section id="dashboard" class="welcome-banner">
           <div class="welcome-text">
             <h2>Welcome back, <span id="username-display2"></span>!</h2>
             <p>Here's a summary of your financial situation</p>
@@ -58,7 +60,7 @@
             <span id="current-date"></span>
           </div>
         </section>
-        
+
         <section class="summary-section">
           <div class="summary-cards">
             <div class="card income">
@@ -93,9 +95,9 @@
             </div>
           </div>
         </section>
-        
+
         <div class="dashboard-grid">
-          <section class="charts-section">
+          <section id="analytics" class="charts-section">
             <div class="section-header">
               <h2><i class="fas fa-chart-pie"></i> Financial Analytics</h2>
               <div class="section-actions">
@@ -107,7 +109,7 @@
                 </select>
               </div>
             </div>
-            
+
             <div class="chart-grid">
               <div class="chart-card">
                 <h3>Income vs Expenses</h3>
@@ -115,14 +117,14 @@
                   <canvas id="income-expense-chart"></canvas>
                 </div>
               </div>
-              
+
               <div class="chart-card">
                 <h3>Expense Categories</h3>
                 <div class="chart-container">
                   <canvas id="expense-categories-chart"></canvas>
                 </div>
               </div>
-              
+
               <div class="chart-card full-width">
                 <h3>Monthly Trend</h3>
                 <div class="chart-container">
@@ -131,12 +133,12 @@
               </div>
             </div>
           </section>
-          
-          <section class="add-transaction-section">
+
+          <section id="transactions" class="add-transaction-section">
             <div class="section-header">
               <h2><i class="fas fa-plus-circle"></i> Add Transaction</h2>
             </div>
-            
+
             <form id="expenseForm" class="transaction-form">
               <div class="form-row">
                 <div class="form-group">
@@ -157,7 +159,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="category">Category</label>
@@ -174,7 +176,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label for="note">Note (Optional)</label>
                 <div class="input-with-icon">
@@ -182,11 +184,11 @@
                   <input type="text" id="note" placeholder="Any additional details">
                 </div>
               </div>
-              
+
               <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> Add Transaction</button>
             </form>
           </section>
-          
+
           <section class="transaction-history-section">
             <div class="section-header">
               <h2><i class="fas fa-history"></i> Transaction History</h2>
@@ -197,7 +199,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="transaction-list-container">
               <div class="transaction-list-header">
                 <span class="col-date">Date</span>
@@ -205,9 +207,9 @@
                 <span class="col-note">Note</span>
                 <span class="col-amount">Amount</span>
               </div>
-              
+
               <ul id="expenseList" class="transaction-list"></ul>
-              
+
               <div class="transaction-list-footer">
                 <button id="load-more" class="btn-secondary">Load More</button>
               </div>
@@ -219,14 +221,17 @@
             <div class="section-header">
               <h2><i class="fas fa-robot"></i> Finance Assistant</h2>
               <div class="section-actions">
-                <button id="clear-memory-btn" class="btn-secondary" title="Clear conversation history"><i class="fas fa-eraser"></i> Clear History</button>
-                <button id="build-index" class="btn-secondary"><i class="fas fa-sync-alt"></i> Build/Refresh Index</button>
+                <button id="clear-memory-btn" class="btn-secondary" title="Clear conversation history"><i
+                    class="fas fa-eraser"></i> Clear History</button>
+                <button id="build-index" class="btn-secondary"><i class="fas fa-sync-alt"></i> Build/Refresh
+                  Index</button>
               </div>
             </div>
             <div class="chatbox">
               <div id="chat-messages" class="chat-messages">
                 <div class="msg bot">
-                  <div class="bubble">👋 Welcome to Finance Assistant! I'm here to help you understand your finances better. I remember our conversation, so feel free to ask follow-up questions!</div>
+                  <div class="bubble">👋 Welcome to Finance Assistant! I'm here to help you understand your finances
+                    better. I remember our conversation, so feel free to ask follow-up questions!</div>
                 </div>
                 <div class="msg bot">
                   <div class="bubble">To get started, please click the "Build/Refresh Index" button above to analyze your transactions. Then you can ask me questions like:
@@ -237,9 +242,25 @@
                 </div>
               </div>
               <form id="chat-form" class="chat-input" onsubmit="return false;">
-                <input id="chat-text" type="text" placeholder="Ask about your finances (e.g., food in August, budget trend)..." required />
-                <button type="button" id="ask-btn" class="btn-primary" style="max-width:160px"><i class="fas fa-paper-plane"></i> Ask</button>
+                <input id="chat-text" type="text"
+                  placeholder="Ask about your finances (e.g., food in August, budget trend)..." required />
+                <button type="button" id="ask-btn" class="btn-primary" style="max-width:160px"><i
+                    class="fas fa-paper-plane"></i> Ask</button>
               </form>
+            </div>
+          </section>
+
+          <!-- Settings Section -->
+          <section id="settings" class="transaction-history-section" style="display: none;">
+            <div class="section-header">
+              <h2><i class="fas fa-cog"></i> Settings</h2>
+            </div>
+            <div class="card">
+              <div class="card-content" style="padding: 30px; text-align: center;">
+                <i class="fas fa-tools" style="font-size: 48px; color: #9e9e9e; margin-bottom: 20px;"></i>
+                <h3>Settings</h3>
+                <p style="color: #757575;">Settings panel coming soon. You can manage your account preferences, notifications, and more here.</p>
+              </div>
             </div>
           </section>
         </div>
@@ -250,4 +271,5 @@
   <script src="dashboard.js"></script>
   <script src="langchain-chat.js"></script>
 </body>
+
 </html>

@@ -12,9 +12,10 @@
 - CORS‑enabled API for local frontend
 - Lightweight schema migration for added columns
 - LangChain + Gemini-based Retrieval Augmented Generation (RAG) over your transactions
-  - Build a per‑user financial vector index
-  - Ask natural language questions ("How much did I spend on groceries in August?", "What are my top categories this month?")
-  - Out‑of‑scope guardrails (won't answer unrelated questions)
+- Conversation memory (retains last 5 exchanges) with Clear History control
+- Build a per-user financial vector index and refresh it dynamically
+- Ask natural language questions ("How much did I spend on groceries in August?", "What are my top categories this month?")
+- Out‑of‑scope guardrails (won't answer unrelated questions)
 
 ## Tech Stack
 Backend: Flask, flask-jwt-extended, mysql-connector-python, bcrypt, python-dotenv, LangChain, FAISS, sentence-transformers, Google Generative AI (Gemini)  
@@ -26,27 +27,26 @@ AI: Local sentence-transformers embeddings + Gemini model for generation
 > Legacy RAG endpoints (`/chatbot/rag_*`) transparently call the LangChain implementation; prefer `/chatbot/langchain/*`.
 
 ## Structure
-```
+```text
 backend/
-  app.py               # Flask app (port 5001) + RAG endpoints
+  app.py               # Flask app (port 5001) + RAG & memory endpoints
   database.py          # DB connection + mini migrations
-  langchain_rag.py     # LangChain RAG service (vector store + QA)
+  langchain_rag.py     # LangChain RAG service (vector store + QA) with memory
   langchain_store/     # Auto-generated FAISS index & metadata (ignored)
   models.sql           # Reference schema
-  forecast.py          # Placeholder
   routes.py            # Unused FastAPI router
   config.py            # Centralized config/env parsing
   requirements.txt
   .env                 # Environment variables (not in git)
   .env.example         # Environment template
 frontend/
-  index.html           # Dashboard (protected)
-  login.html           # Login
-  signup.html          # Signup
-  dashboard.js         # Auth + expense logic
-  langchain-chat.js    # Frontend integration for LangChain RAG
+  index.html           # Dashboard with navigation, chatbot, and settings
+  login.html           # Login page
+  signup.html          # Signup page
+  dashboard.js         # Auth, expense logic & navigation handlers
+  langchain-chat.js    # Frontend integration for LangChain RAG & memory
   rag-chat.js          # Legacy placeholder (no-op)
-  style.css
+  style.css            # UI styling & responsive design
 budgetwise_env/        # Local venv (ignored)
 ```
 
@@ -112,9 +112,11 @@ expenses(id, user_id, date, category, note, amount, type['Income'|'Expense'])
 | GET    | /expenses                   | Yes  | List user expenses |
 | GET    | /user                       | Yes  | User profile |
 | GET    | /debug/users                | No   | Recent users (dev) |
-| POST   | /chatbot/langchain/build    | Yes  | Build (or re/build) vector index for user |
+| POST   | /chatbot/langchain/build    | Yes  | Build or refresh vector index |
 | GET    | /chatbot/langchain/stats    | Yes  | Index statistics |
 | POST   | /chatbot/langchain/query    | Yes  | Ask financial question (RAG) |
+| POST   | /chatbot/langchain/clear-memory | Yes  | Clear conversation memory |
+| GET    | /chatbot/langchain/history  | Yes  | Retrieve conversation history |
 | POST   | /chatbot/rag_build          | Yes  | Legacy alias → LangChain build |
 | POST   | /chatbot/rag_query          | Yes  | Legacy alias → LangChain query |
 | GET    | /debug/rag                  | No   | Debug RAG status (dev) |
@@ -127,9 +129,10 @@ Authorization: Bearer <token>
 ## Frontend Flow
 1. Signup / login → store token + user metadata in localStorage.
 2. Dashboard loads → validates token → fetches `/expenses`.
-3. (Optional) Build RAG index: click "Build Index" (calls `/chatbot/langchain/build`).
-4. Ask questions in chat: sends `/chatbot/langchain/query`.
-5. Add transaction → POST `/add_expense` → auto-added to vector index.
+- (Optional) Build/Reresh Index → click "Build/Refresh Index" (calls `/chatbot/langchain/build`).
++2a. Use "Clear History" to reset conversation memory (calls `/chatbot/langchain/clear-memory`).
+3. Ask questions in chat → sends `/chatbot/langchain/query`, memory-aware for follow-ups.
+4. Add transaction → POST `/add_expense` → auto-added to vector index and memory.
 
 ### RAG Usage Quickstart
 1. Ensure `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) is set in `.env`.

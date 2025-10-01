@@ -70,44 +70,68 @@ function initializeDashboard() {
     loadExpenses();
   });
   
-  // Menu item click handlers
+    // Menu item click handlers
   document.querySelectorAll('.sidebar-menu a').forEach(menuItem => {
     menuItem.addEventListener('click', function(e) {
       e.preventDefault();
       
-      // Remove active class from all menu items
+      // Update active state
       document.querySelectorAll('.sidebar-menu li').forEach(item => {
         item.classList.remove('active');
       });
-      
-      // Add active class to clicked item's parent
       this.parentElement.classList.add('active');
       
-      // Handle navigation (for now just scroll to relevant section)
-      const targetSection = this.getAttribute('href').substring(1);
-      let targetElement;
+      // Get the section ID from href
+      const sectionId = this.getAttribute('href').substring(1);
       
-      switch(targetSection) {
-        case 'dashboard':
-          targetElement = document.querySelector('.welcome-banner');
-          break;
-        case 'transactions':
-          targetElement = document.querySelector('.transaction-history-section');
-          break;
-        case 'analytics':
-          targetElement = document.querySelector('.charts-section');
-          break;
-        default:
-          targetElement = document.querySelector('.welcome-banner');
-      }
+      // Show all sections by default (for dashboard view)
+      document.querySelectorAll('.dashboard-content > section, .dashboard-grid > section').forEach(section => {
+        section.style.display = '';
+      });
       
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
+      // Handle different section navigations
+      if (sectionId === 'dashboard') {
+        // Dashboard: show welcome banner, summary, and charts
+        document.querySelector('.summary-section').style.display = '';
+        document.querySelector('.dashboard-grid').style.display = '';
         
-        // Close mobile menu if open
-        document.querySelector('.sidebar').classList.remove('active');
-        document.querySelector('.sidebar-overlay').classList.remove('active');
+        // Scroll to top
+        document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (sectionId === 'transactions') {
+        // Scroll to add transaction section
+        const targetSection = document.getElementById('transactions');
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else if (sectionId === 'analytics') {
+        // Scroll to analytics section
+        const targetSection = document.getElementById('analytics');
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else if (sectionId === 'assistant') {
+        // Scroll to assistant section
+        const targetSection = document.getElementById('assistant');
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else if (sectionId === 'settings') {
+        // Hide all sections except settings
+        document.querySelector('.summary-section').style.display = 'none';
+        document.querySelectorAll('.dashboard-grid > section').forEach(section => {
+          section.style.display = 'none';
+        });
+        const settingsSection = document.getElementById('settings');
+        if (settingsSection) {
+          settingsSection.style.display = 'block';
+          // Scroll to top
+          document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }
+      
+      // Close mobile menu if open
+      document.querySelector('.sidebar').classList.remove('active');
+      document.querySelector('.sidebar-overlay').classList.remove('active');
     });
   });
   
