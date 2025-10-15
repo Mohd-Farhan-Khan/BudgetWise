@@ -5,14 +5,17 @@
 ## Features
 - User signup & login (JWT auth – 24h expiry)
 - Secure password hashing (bcrypt with Werkzeug fallback)
+- Strong password validation (uppercase, lowercase, digit, special character required)
 - MySQL persistence (users, expenses)
 - Environment-based configuration (.env file)
 - Add Income / Expense with category, note, date
+- **Edit and Delete transactions** with secure authorization
 - Transaction history & summary (Income / Expenses / Balance)
 - CORS‑enabled API for local frontend
 - Lightweight schema migration for added columns
 - LangChain + Gemini-based Retrieval Augmented Generation (RAG) over your transactions
 - Conversation memory (retains last 5 exchanges) with Clear History control
+- Natural, human-like conversational AI responses (temperature 0.7, casual tone)
 - Build a per-user financial vector index and refresh it dynamically
 - Ask natural language questions ("How much did I spend on groceries in August?", "What are my top categories this month?")
 - Out‑of‑scope guardrails (won't answer unrelated questions)
@@ -106,10 +109,12 @@ expenses(id, user_id, date, category, note, amount, type['Income'|'Expense'])
 ## API
 | Method | Path                        | Auth | Notes |
 |--------|-----------------------------|------|-------|
-| POST   | /signup                     | No   | Create user |
+| POST   | /signup                     | No   | Create user (strong password validation) |
 | POST   | /login                      | No   | Returns JWT + user info |
 | POST   | /add_expense                | Yes  | Add expense/income (auto-indexes in RAG) |
 | GET    | /expenses                   | Yes  | List user expenses |
+| PUT    | /expenses/<id>              | Yes  | Edit transaction (rebuilds RAG index) |
+| DELETE | /expenses/<id>              | Yes  | Delete transaction (rebuilds RAG index) |
 | GET    | /user                       | Yes  | User profile |
 | GET    | /debug/users                | No   | Recent users (dev) |
 | POST   | /chatbot/langchain/build    | Yes  | Build or refresh vector index |
@@ -169,14 +174,16 @@ If you ask something unrelated (e.g. "Tell me a joke"), the model will respond w
 | Empty RAG answers            | Index not built / no transactions    | Build index after adding data |
 
 ## Improvements To Do
-- Add edit/delete for expenses
-- Pagination & filtering
+- ~~Add edit/delete for expenses~~ ✅ Completed
+- ~~Strong password validation~~ ✅ Completed
+- Pagination & filtering for large transaction lists
 - Hook up forecasting prototype
 - Add tests (pytest) & linting
 - Make frontend API URL configurable
-- Add input validation and better error surfaces
+- Enhanced input validation and better error surfaces
 - Per-user isolated vector stores or filtering improvements
 - Rate limit & caching strategy for RAG
+- Email format validation
 
 ## Contributing
 Small PRs welcome. Clean code, clear commit messages.

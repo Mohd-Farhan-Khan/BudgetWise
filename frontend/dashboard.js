@@ -421,6 +421,7 @@ async function loadExpenses() {
 
       const li = document.createElement("li");
       li.className = exp.type.toLowerCase();
+      li.setAttribute('data-id', exp.id);
 
       const formattedDate = new Date(exp.date).toLocaleDateString();
 
@@ -429,6 +430,14 @@ async function loadExpenses() {
         <span class="col-category">${exp.category || 'Uncategorized'}</span>
         <span class="col-note">${exp.note || '-'}</span>
         <span class="col-amount">${exp.type === 'Income' ? '+' : '-'}$${parseFloat(exp.amount).toFixed(2)}</span>
+        <span class="col-actions">
+          <button class="btn-action btn-edit" onclick="editTransaction(${exp.id})" title="Edit transaction">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn-action btn-delete" onclick="deleteTransaction(${exp.id})" title="Delete transaction">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </span>
       `;
       expenseList.appendChild(li);
     });
@@ -779,3 +788,191 @@ function renderMonthlyTrendChart(expenses) {
     }
   });
 }
+
+// --- Edit Transaction ---
+async function editTransaction(expenseId) {
+  if (!checkAuth()) return;
+  
+  // Fetch current transaction data
+  const res = await fetch(`${API_BASE}/expenses`, {
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+  
+  if (!res.ok) {
+    alert("Failed to fetch transaction data");
+    return;
+  }
+  
+  const expenses = await res.json();
+  const transaction = expenses.find(exp => exp.id === expenseId);
+  
+  if (!transaction) {
+    alert("Transaction not found");
+    return;
+  }
+  
+  // Create a modal for editing
+  const modal = document.createElement('div');
+  modal.className = 'edit-modal';
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeEditModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-edit"></i> Edit Transaction</h3>
+        <button onclick="closeEditModal()" class="modal-close">&times;</button>
+      </div>
+      <form id="editTransactionForm" class="transaction-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-date">Date</label>
+            <div class="input-with-icon">
+              <i class="far fa-calendar"></i>
+              <input type="date" id="edit-date" value="${transaction.date}" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="edit-type">Type</label>
+            <div class="input-with-icon">
+              <i class="fas fa-tag"></i>
+              <select id="edit-type">
+                <option value="Expense" ${transaction.type === 'Expense' ? 'selected' : ''}>Expense</option>
+                <option value="Income" ${transaction.type === 'Income' ? 'selected' : ''}>Income</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-category">Category</label>
+            <div class="input-with-icon">
+              <i class="fas fa-folder"></i>
+              <input type="text" id="edit-category" value="${transaction.category}" placeholder="E.g., Food, Rent" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="edit-amount">Amount</label>
+            <div class="input-with-icon">
+              <i class="fas fa-dollar-sign"></i>
+              <input type="number" id="edit-amount" value="${transaction.amount}" placeholder="0.00" min="0.01" step="0.01" required>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-note">Note (Optional)</label>
+          <div class="input-with-icon">
+            <i class="far fa-sticky-note"></i>
+            <input type="text" id="edit-note" value="${transaction.note || ''}" placeholder="Any additional details">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" onclick="closeEditModal()" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+      </form>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Handle form submission
+  document.getElementById('editTransactionForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const submitButton = e.target.querySelector('button[type="submit"]');
+    const originalText = submitButton.innerHTML;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitButton.disabled = true;
+    
+    const updatedData = {
+      date: document.getElementById('edit-date').value,
+      type: document.getElementById('edit-type').value,
+      category: document.getElementById('edit-category').value,
+      amount: parseFloat(document.getElementById('edit-amount').value),
+      note: document.getElementById('edit-note').value
+    };
+    
+    try {
+      const updateRes = await fetch(`${API_BASE}/expenses/${expenseId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedData)
+      });
+      
+      if (updateRes.status === 401) {
+        alert("Your session has expired. Please login again.");
+        logout();
+        return;
+      }
+      
+      if (!updateRes.ok) {
+        const errData = await updateRes.json();
+        alert(errData.message || "Failed to update transaction");
+        submitButton.innerHTML = originalText;
+        submitButton.disabled = false;
+        return;
+      }
+      
+      showNotification("Transaction updated successfully");
+      closeEditModal();
+      loadExpenses();
+    } catch (err) {
+      console.error("Error updating transaction:", err);
+      alert("Failed to update transaction. Please try again.");
+      submitButton.innerHTML = originalText;
+      submitButton.disabled = false;
+    }
+  });
+}
+
+function closeEditModal() {
+  const modal = document.querySelector('.edit-modal');
+  if (modal) {
+    modal.remove();
+  }
+}
+
+// --- Delete Transaction ---
+async function deleteTransaction(expenseId) {
+  if (!checkAuth()) return;
+  
+  if (!confirm("Are you sure you want to delete this transaction? This action cannot be undone.")) {
+    return;
+  }
+  
+  try {
+    const res = await fetch(`${API_BASE}/expenses/${expenseId}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (res.status === 401) {
+      alert("Your session has expired. Please login again.");
+      logout();
+      return;
+    }
+    
+    if (!res.ok) {
+      const errData = await res.json();
+      alert(errData.message || "Failed to delete transaction");
+      return;
+    }
+    
+    showNotification("Transaction deleted successfully");
+    loadExpenses();
+  } catch (err) {
+    console.error("Error deleting transaction:", err);
+    alert("Failed to delete transaction. Please try again.");
+  }
+}
+
+// Make functions globally accessible
+window.editTransaction = editTransaction;
+window.deleteTransaction = deleteTransaction;
+window.closeEditModal = closeEditModal;

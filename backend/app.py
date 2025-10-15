@@ -395,6 +395,102 @@ def get_expenses():
     
     return jsonify(rows)
 
+# --- Edit Expense ---
+@app.route("/expenses/<int:expense_id>", methods=["PUT"])
+@jwt_required()
+def edit_expense(expense_id):
+    current_user_id = int(get_jwt_identity())
+    data = request.json or {}
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    try:
+        # First, verify the expense belongs to the current user
+        cursor.execute("SELECT * FROM expenses WHERE id=%s", (expense_id,))
+        expense = cursor.fetchone()
+        
+        if not expense:
+            return jsonify({"message": "Transaction not found"}), 404
+        
+        if expense["user_id"] != current_user_id:
+            logger.warning(f"Unauthorized edit attempt by user_id={current_user_id} for expense_id={expense_id}")
+            return jsonify({"message": "Unauthorized to edit this transaction"}), 403
+        
+        # Update the expense
+        date = data.get("date", expense["date"])
+        category = data.get("category", expense["category"])
+        note = data.get("note", expense["note"])
+        amount = data.get("amount", expense["amount"])
+        expense_type = data.get("type", expense["type"])
+        
+        logger.info(f"Editing expense_id={expense_id} for user_id={current_user_id}")
+        cursor.execute("""
+            UPDATE expenses 
+            SET date=%s, category=%s, note=%s, amount=%s, type=%s
+            WHERE id=%s AND user_id=%s
+        """, (date, category, note, amount, expense_type, expense_id, current_user_id))
+        conn.commit()
+        
+        # Fetch updated row for RAG sync
+        cursor.execute("SELECT id, user_id, date, category, note, amount, type FROM expenses WHERE id=%s", (expense_id,))
+        updated_row = cursor.fetchone()
+        
+        # Update LangChain RAG index
+        try:
+            # Remove old entry and add new one
+            langchain_rag.rag_service.rebuild_user_index(current_user_id)
+            logger.info(f"LangChain index rebuilt after edit for user_id={current_user_id}")
+        except Exception as e:
+            logger.exception(f"LangChain RAG update error for expense_id={expense_id}")
+        
+        return jsonify({"message": "Transaction updated successfully", "id": expense_id}), 200
+    except Exception as e:
+        logger.exception("Failed to edit expense")
+        return jsonify({"message": "Failed to update transaction", "error": str(e)}), 400
+    finally:
+        conn.close()
+
+# --- Delete Expense ---
+@app.route("/expenses/<int:expense_id>", methods=["DELETE"])
+@jwt_required()
+def delete_expense(expense_id):
+    current_user_id = int(get_jwt_identity())
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    try:
+        # First, verify the expense belongs to the current user
+        cursor.execute("SELECT * FROM expenses WHERE id=%s", (expense_id,))
+        expense = cursor.fetchone()
+        
+        if not expense:
+            return jsonify({"message": "Transaction not found"}), 404
+        
+        if expense["user_id"] != current_user_id:
+            logger.warning(f"Unauthorized delete attempt by user_id={current_user_id} for expense_id={expense_id}")
+            return jsonify({"message": "Unauthorized to delete this transaction"}), 403
+        
+        # Delete the expense
+        logger.info(f"Deleting expense_id={expense_id} for user_id={current_user_id}")
+        cursor.execute("DELETE FROM expenses WHERE id=%s AND user_id=%s", (expense_id, current_user_id))
+        conn.commit()
+        
+        # Update LangChain RAG index
+        try:
+            langchain_rag.rag_service.rebuild_user_index(current_user_id)
+            logger.info(f"LangChain index rebuilt after delete for user_id={current_user_id}")
+        except Exception as e:
+            logger.exception(f"LangChain RAG update error after deleting expense_id={expense_id}")
+        
+        return jsonify({"message": "Transaction deleted successfully"}), 200
+    except Exception as e:
+        logger.exception("Failed to delete expense")
+        return jsonify({"message": "Failed to delete transaction", "error": str(e)}), 400
+    finally:
+        conn.close()
+
 # --- Get User Info ---
 @app.route("/user", methods=["GET"])
 @jwt_required()

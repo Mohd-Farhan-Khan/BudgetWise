@@ -50,7 +50,7 @@ os.makedirs(VECTOR_STORE_DIR, exist_ok=True)
 EMBEDDING_ID_FILE = os.path.join(VECTOR_STORE_DIR, "embedding_model.txt")
 
 # Out-of-context guard message
-OOC_MESSAGE = "I can only answer questions related to your expenses and financial insights."
+OOC_MESSAGE = "Hey, I'm your finance buddy! I can only help with questions about your spending, income, budgets, and financial insights. Ask me anything money-related! 💰"
 
 # LangChain embeddings - switch to local HuggingFace to avoid API quotas
 logger.info(f"Using embedding model={EMBEDDING_MODEL} (HuggingFace) gemini_model={GEMINI_MODEL} index_dir={VECTOR_STORE_DIR}")
@@ -686,46 +686,46 @@ class BudgetWiseRAG:
                 llm = ChatGoogleGenerativeAI(
                     model=GEMINI_MODEL,
                     google_api_key=GEMINI_API_KEY,
-                    temperature=0.4  # Increased for more natural responses
+                    temperature=0.7  # Higher temperature for more natural, human-like responses
                 )
                 
                 # Conversational prompt with memory context
                 condense_question_prompt = PromptTemplate(
-                    template="""Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question that includes relevant context from the conversation history.
+                    template="""Based on our conversation so far and this new question, what is the user really asking about?
 
-Chat History:
+Previous conversation:
 {chat_history}
 
-Follow Up Question: {question}
-Standalone question:""",
+New question: {question}
+
+Rephrased as a clear, standalone question:""",
                     input_variables=["chat_history", "question"]
                 )
                 
                 # Main QA prompt with conversation awareness
                 qa_prompt_template = """
-You are a friendly personal finance assistant for BudgetWise with access to conversation history.
-Answer naturally using the provided transaction data and remember previous parts of our conversation.
+You're a friendly, casual financial buddy helping someone understand their money habits. You remember what you've talked about before.
 
-IMPORTANT SCOPE RULE:
-- If the question is outside personal finance, transactions, budgets, or spending/income insights,
-    respond EXACTLY with: """ + OOC_MESSAGE + """
-- Do not answer unrelated topics.
+CRITICAL RULES:
+1. If they ask about anything OTHER than money, spending, income, budgets, or savings → respond with ONLY: """ + OOC_MESSAGE + """
+2. Otherwise, help them understand their finances in a natural, friendly way.
 
-Response guidelines:
-- Reference previous questions or answers when relevant (e.g., "As I mentioned earlier..." or "Compared to what we discussed...")
-- Start with a direct, natural answer
-- Be conversational - like talking to a friend who remembers what you discussed
-- Use specific numbers from the transactions
-- Bold important amounts like **$X.XX**
-- Share useful insights you notice
-- Keep it concise but informative (around 150-200 words)
-- If the user asks follow-up questions (like "what about dining?", "and last month?"), understand the context
+HOW TO RESPOND:
+- Talk like a real person, not a robot
+- Reference earlier parts of the conversation naturally (e.g., "Like I mentioned...", "Remember when we talked about...", "Compared to that...")
+- Get straight to the point - no "Based on the data" or "According to the transactions"
+- Use actual numbers and be specific
+- Highlight important amounts in **bold**
+- Share insights if you notice patterns
+- Keep it friendly and conversational - 2-3 short paragraphs max
+- If they ask follow-ups like "what about X?" or "how much on Y?", understand they're continuing the conversation
 
-Context (Relevant Transactions):
+Here are their relevant transactions:
 {context}
 
-Question: {question}
-Answer:"""
+Their question: {question}
+
+Your response:"""
                 
                 qa_prompt = PromptTemplate(
                     template=qa_prompt_template,
@@ -754,7 +754,7 @@ Answer:"""
                 llm = ChatGoogleGenerativeAI(
                     model=GEMINI_MODEL,
                     google_api_key=GEMINI_API_KEY,
-                    temperature=0.4  # Increased for more natural responses
+                    temperature=0.7  # Higher temperature for more natural, human-like responses
                 )
                 
                 # Get conversation history
@@ -762,11 +762,12 @@ Answer:"""
                 
                 messages = [
                     SystemMessage(content=(
-                        "You are a friendly personal finance assistant with conversation memory. "
-                        "Answer naturally based only on the provided transactions and conversation history. "
-                        "Be conversational and helpful. Use specific numbers and dates. Bold important amounts. "
-                        "Reference previous conversation when relevant. "
-                        "If the question is outside personal finance/transactions/budgets, respond EXACTLY with: " + OOC_MESSAGE
+                        "You're a friendly financial buddy who remembers conversations. "
+                        "Talk naturally - no robotic phrases like 'Based on the data' or 'According to'. "
+                        "Just answer directly like a helpful friend would. Use specific numbers and dates. "
+                        "Reference what you talked about before when relevant. "
+                        "Bold important amounts. Keep it casual and conversational. "
+                        "If they ask about non-financial stuff, only say: " + OOC_MESSAGE
                     ))
                 ]
                 
