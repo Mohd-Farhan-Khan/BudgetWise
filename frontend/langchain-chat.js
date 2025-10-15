@@ -67,6 +67,10 @@ const LANGCHAIN_API_BASE = window.BUDGETWISE_API_BASE || "http://127.0.0.1:5001"
   }
 
   function addMsg(role, text, opts = { markdown: true }) {
+    // Normalize currency to rupees on the client as a safety net
+    if (typeof text === 'string') {
+      text = text.replace(/\$(\d{1,3}(?:,\d{3})*(?:\.\d+)?)/g, '₹$1');
+    }
     const wrap = document.createElement('div');
     wrap.className = `msg ${role}`;
     const content = opts.markdown ? renderMarkdown(text) : text.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));

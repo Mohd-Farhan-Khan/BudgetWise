@@ -1,3 +1,6 @@
+function formatChatbotCurrency(text) {
+  return text.replace(/\$(\d+(?:,\d{3})*(?:\.\d+)?)/g, '₹$1');
+}
 const API_BASE = "http://127.0.0.1:5001"; // updated port
 // Also expose on a global namespace to share with other scripts
 window.BUDGETWISE_API_BASE = API_BASE;
@@ -377,9 +380,9 @@ async function loadExpenses() {
       `;
 
       // Reset summary cards
-      document.getElementById("total-income").textContent = "$0.00";
-      document.getElementById("total-expense").textContent = "$0.00";
-      document.getElementById("balance").textContent = "$0.00";
+  document.getElementById("total-income").textContent = "₹0.00";
+  document.getElementById("total-expense").textContent = "₹0.00";
+  document.getElementById("balance").textContent = "₹0.00";
 
       // Show empty state charts
       updateCharts([]);
@@ -429,7 +432,7 @@ async function loadExpenses() {
         <span class="col-date">${formattedDate}</span>
         <span class="col-category">${exp.category || 'Uncategorized'}</span>
         <span class="col-note">${exp.note || '-'}</span>
-        <span class="col-amount">${exp.type === 'Income' ? '+' : '-'}$${parseFloat(exp.amount).toFixed(2)}</span>
+  <span class="col-amount">${exp.type === 'Income' ? '+' : '-'}₹${parseFloat(exp.amount).toFixed(2)}</span>
         <span class="col-actions">
           <button class="btn-action btn-edit" onclick="editTransaction(${exp.id})" title="Edit transaction">
             <i class="fas fa-edit"></i> Edit
@@ -443,9 +446,9 @@ async function loadExpenses() {
     });
 
     // Update summary
-    document.getElementById("total-expense").textContent = `$${totalExpense.toFixed(2)}`;
-    document.getElementById("total-income").textContent = `$${totalIncome.toFixed(2)}`;
-    document.getElementById("balance").textContent = `$${(totalIncome - totalExpense).toFixed(2)}`;
+  document.getElementById("total-expense").textContent = `₹${totalExpense.toFixed(2)}`;
+  document.getElementById("total-income").textContent = `₹${totalIncome.toFixed(2)}`;
+  document.getElementById("balance").textContent = `₹${(totalIncome - totalExpense).toFixed(2)}`;
 
     // Update charts with filtered expenses data
     updateCharts(filteredExpenses);
@@ -536,7 +539,7 @@ function renderIncomeExpenseChart(expenses) {
             label: function (context) {
               const label = context.label || '';
               const value = context.raw || 0;
-              return `${label}: $${value.toFixed(2)}`;
+              return `${label}: ₹${value.toFixed(2)}`;
             }
           }
         }
@@ -640,7 +643,7 @@ function renderExpenseCategoriesChart(expenses) {
               const value = context.raw || 0;
               const total = context.dataset.data.reduce((a, b) => a + b, 0);
               const percentage = ((value / total) * 100).toFixed(1);
-              return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+              return `${label}: ₹${value.toFixed(2)} (${percentage}%)`;
             }
           }
         }
@@ -767,7 +770,7 @@ function renderMonthlyTrendChart(expenses) {
         y: {
           beginAtZero: true,
           ticks: {
-            callback: value => `$${value}`
+            callback: value => `₹${value}`
           }
         }
       },
@@ -780,7 +783,7 @@ function renderMonthlyTrendChart(expenses) {
             label: function (context) {
               const label = context.dataset.label || '';
               const value = context.raw || 0;
-              return `${label}: $${value.toFixed(2)}`;
+              return `${label}: ₹${value.toFixed(2)}`;
             }
           }
         }
@@ -854,8 +857,8 @@ async function editTransaction(expenseId) {
           <div class="form-group">
             <label for="edit-amount">Amount</label>
             <div class="input-with-icon">
-              <i class="fas fa-dollar-sign"></i>
-              <input type="number" id="edit-amount" value="${transaction.amount}" placeholder="0.00" min="0.01" step="0.01" required>
+              <i class="fas fa-rupee-sign"></i>
+              <input type="number" id="edit-amount" value="${transaction.amount}" placeholder="₹ 0.00" min="0.01" step="0.01" required>
             </div>
           </div>
         </div>

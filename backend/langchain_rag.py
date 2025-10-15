@@ -273,7 +273,7 @@ class BudgetWiseRAG:
             f"Date: {tx_date} | "
             f"Type: {tx_type} | "
             f"Category: {tx_category} | "
-            f"Amount: ${float(tx_amount):.2f} | "
+            f"Amount: ₹{float(tx_amount):.2f} | "
             f"Note: {tx_note}"
         )
 
@@ -455,7 +455,7 @@ class BudgetWiseRAG:
             text = f"Transaction ID: {transaction.get('id')} | User: {transaction.get('user_id')} | "
             text += f"Date: {transaction.get('date', 'unknown_date')} | Type: {transaction.get('type', 'unknown_type')} | "
             text += f"Category: {transaction.get('category', 'uncategorized')} | "
-            text += f"Amount: ${float(transaction.get('amount', 0)):.2f} | Note: {transaction.get('note', '')}"
+            text += f"Amount: ₹{float(transaction.get('amount', 0)):.2f} | Note: {transaction.get('note', '')}"
             
             # Create metadata
             metadata = self._create_metadata(transaction)
@@ -578,7 +578,7 @@ class BudgetWiseRAG:
                 - Start with a direct answer to their question
                 - Be conversational and natural - write like you're talking to a friend
                 - Use specific numbers and dates from the transactions
-                - Highlight important amounts in bold (e.g., **$123.45**)
+                - Highlight important amounts in bold (e.g., **₹123.45**)
                 - Group information logically but don't force strict sections
                 - Add helpful insights or patterns you notice
                 - Keep currency values to 2 decimals
@@ -667,7 +667,7 @@ class BudgetWiseRAG:
                 f"Date: {tx.get('date')} | "
                 f"Type: {tx.get('type')} | "
                 f"Category: {tx.get('category')} | "
-                f"Amount: ${float(tx.get('amount')):.2f} | "
+                f"Amount: ₹{float(tx.get('amount')):.2f} | "
                 f"Note: {tx.get('note')}"
             )
             formatted_transactions.append(tx_str)
