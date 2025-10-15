@@ -19,7 +19,6 @@ backend/langchain_store/
 backend/langchain_store/**
 *langchain_store/
 *.faiss
-*.pkl
 
 # Logs & runtime
 *.log

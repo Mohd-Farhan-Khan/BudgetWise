@@ -1,0 +1,467 @@
+Date,Time,Description,Amount,Category,Type,Payment Mode,Transaction ID
+2025-07-01,10:30,Salary Credited,312000,Income,Income,Bank Transfer,SAL20250701001
+2025-07-01,13:21,Gold Investment,-8720,Investment,Expense,Net Banking,TXN202507010000
+2025-07-01,14:18,South Indian Restaurant,-310,Food & Dining,Expense,Net Banking,TXN202507010000
+2025-07-01,14:24,Local Restaurant,-1220,Food & Dining,Expense,Card,TXN202507010000
+2025-07-01,21:00,Chinese Restaurant,-780,Food & Dining,Expense,Net Banking,TXN202507010000
+2025-07-01,22:00,Spotify Premium,-120,Entertainment,Expense,Card,TXN202507010000
+2025-07-02,16:39,Swiggy Order,-180,Food & Dining,Expense,Cash,TXN202507020000
+2025-07-02,16:42,Ola Cab,-100,Transportation,Expense,Net Banking,TXN202507020000
+2025-07-03,12:02,Electricity Bill,-2850,Utilities,Expense,Card,TXN202507030000
+2025-07-03,12:28,Gym Membership,-2730,Healthcare,Expense,Net Banking,TXN202507030000
+2025-07-03,14:15,Burger King,-250,Food & Dining,Expense,Card,TXN202507030000
+2025-07-03,17:19,Bakery Items,-130,Food & Dining,Expense,Card,TXN202507030000
+2025-07-03,21:36,Skill Development,-2530,Education,Expense,UPI,TXN202507030000
+2025-07-03,21:44,Lifestyle Store,-4260,Shopping,Expense,Card,TXN202507030000
+2025-07-04,10:00,Star Bazaar,-3000,Groceries,Expense,Net Banking,TXN202507040000
+2025-07-04,10:29,Biryani Restaurant,-720,Food & Dining,Expense,Cash,TXN202507040000
+2025-07-04,12:16,Toll Charges,-80,Transportation,Expense,Net Banking,TXN202507040000
+2025-07-04,15:32,Rapido Bike,-120,Transportation,Expense,Cash,TXN202507040000
+2025-07-04,21:57,Petrol Pump,-1430,Transportation,Expense,Cash,TXN202507040000
+2025-07-04,22:21,Parking Fees,-40,Transportation,Expense,UPI,TXN202507040000
+2025-07-04,23:10,Amazon Shopping,-970,Shopping,Expense,Card,TXN202507040000
+2025-07-05,06:15,Internet Bill,-1440,Utilities,Expense,Cash,TXN202507050000
+2025-07-05,06:39,Water Bill,-340,Utilities,Expense,UPI,TXN202507050000
+2025-07-05,10:59,Nature's Basket,-1820,Groceries,Expense,Card,TXN202507050000
+2025-07-05,13:38,Amazon Shopping,-620,Shopping,Expense,Card,TXN202507050000
+2025-07-05,14:18,Burger King,-280,Food & Dining,Expense,Net Banking,TXN202507050000
+2025-07-05,15:40,Lifestyle Store,-4780,Shopping,Expense,UPI,TXN202507050000
+2025-07-05,17:26,Maintenance Charges,-3520,Utilities,Expense,UPI,TXN202507050000
+2025-07-05,20:04,Petrol Pump,-560,Transportation,Expense,Cash,TXN202507050000
+2025-07-05,22:30,Ice Cream Parlor,-180,Food & Dining,Expense,UPI,TXN202507050000
+2025-07-06,12:36,Croma Electronics,-5940,Shopping,Expense,Card,TXN202507060000
+2025-07-06,13:59,Petrol Pump,-2960,Transportation,Expense,Cash,TXN202507060000
+2025-07-06,15:14,Starbucks Coffee,-300,Food & Dining,Expense,Net Banking,TXN202507060000
+2025-07-06,21:07,Friend Payment,-190,Transfer,Expense,UPI,TXN202507060000
+2025-07-07,12:00,Reliance Fresh,-1230,Groceries,Expense,UPI,TXN202507070000
+2025-07-07,17:44,Friend Payment,-1570,Transfer,Expense,Card,TXN202507070000
+2025-07-07,18:02,Mobile Recharge,-500,Utilities,Expense,Cash,TXN202507070000
+2025-07-07,20:41,Spencer's Retail,-1470,Groceries,Expense,Card,TXN202507070000
+2025-07-08,10:13,Blinkit Delivery,-320,Groceries,Expense,Cash,TXN202507080000
+2025-07-08,16:47,Dominos Pizza,-620,Food & Dining,Expense,Card,TXN202507080000
+2025-07-08,20:57,Bike Service,-540,Transportation,Expense,Net Banking,TXN202507080000
+2025-07-08,23:25,YouTube Premium,-150,Entertainment,Expense,Cash,TXN202507080000
+2025-07-09,07:12,Burger King,-350,Food & Dining,Expense,UPI,TXN202507090000
+2025-07-09,12:21,1mg Medicine Order,-1460,Healthcare,Expense,Card,TXN202507090000
+2025-07-09,16:48,Family Support,-9850,Transfer,Expense,UPI,TXN202507090000
+2025-07-09,23:13,Metro Recharge,-270,Transportation,Expense,Cash,TXN202507090000
+2025-07-09,23:30,Ice Cream Parlor,-240,Food & Dining,Expense,Net Banking,TXN202507090000
+2025-07-10,10:15,Internet Bill,-1200,Utilities,Expense,Card,TXN202507100000
+2025-07-10,14:44,Nature's Basket,-920,Groceries,Expense,Cash,TXN202507100000
+2025-07-10,15:19,Internet Bill,-680,Utilities,Expense,UPI,TXN202507100000
+2025-07-10,20:37,Ice Cream Parlor,-280,Food & Dining,Expense,UPI,TXN202507100000
+2025-07-10,21:10,Train Booking IRCTC,-360,Transportation,Expense,UPI,TXN202507100000
+2025-07-10,23:12,Blinkit Delivery,-550,Groceries,Expense,Cash,TXN202507100000
+2025-07-10,23:23,Apollo Pharmacy,-320,Healthcare,Expense,UPI,TXN202507100000
+2025-07-11,13:08,Street Food,-50,Food & Dining,Expense,Net Banking,TXN202507110000
+2025-07-11,14:28,LPG Gas Cylinder,-960,Utilities,Expense,Cash,TXN202507110000
+2025-07-11,16:49,Barbeque Nation,-1780,Food & Dining,Expense,UPI,TXN202507110000
+2025-07-11,21:18,Reliance Digital,-5030,Shopping,Expense,Cash,TXN202507110000
+2025-07-11,23:46,Auto Rickshaw,-50,Transportation,Expense,UPI,TXN202507110000
+2025-07-12,10:07,Pizza Hut,-680,Food & Dining,Expense,UPI,TXN202507120000
+2025-07-12,12:06,Rapido Bike,-40,Transportation,Expense,Card,TXN202507120000
+2025-07-12,15:10,Amazon Shopping,-1630,Shopping,Expense,Net Banking,TXN202507120000
+2025-07-12,19:32,Westside Shopping,-1540,Shopping,Expense,Card,TXN202507120000
+2025-07-12,20:31,Starbucks Coffee,-320,Food & Dining,Expense,UPI,TXN202507120000
+2025-07-12,20:40,Star Bazaar,-1630,Groceries,Expense,Card,TXN202507120000
+2025-07-12,20:56,Burger King,-280,Food & Dining,Expense,UPI,TXN202507120000
+2025-07-12,21:35,Uber Ride,-290,Transportation,Expense,Card,TXN202507120000
+2025-07-12,23:18,EMI Payment,-28170,Transfer,Expense,Net Banking,TXN202507120000
+2025-07-13,09:37,Starbucks Coffee,-320,Food & Dining,Expense,Net Banking,TXN202507130000
+2025-07-13,09:45,Ajio Clothing,-2180,Shopping,Expense,Cash,TXN202507130000
+2025-07-13,17:13,Nature's Basket,-2660,Groceries,Expense,UPI,TXN202507130000
+2025-07-13,20:43,BigBasket Order,-690,Groceries,Expense,UPI,TXN202507130000
+2025-07-13,23:20,Eye Checkup,-780,Healthcare,Expense,UPI,TXN202507130000
+2025-07-14,09:42,Flight Booking,-7250,Transportation,Expense,Net Banking,TXN202507140000
+2025-07-14,11:00,Tea/Coffee Shop,-140,Food & Dining,Expense,UPI,TXN202507140000
+2025-07-14,21:54,Haldiram's,-160,Food & Dining,Expense,Card,TXN202507140000
+2025-07-15,07:04,Haldiram's,-250,Food & Dining,Expense,Cash,TXN202507150000
+2025-07-15,11:45,Chinese Restaurant,-920,Food & Dining,Expense,UPI,TXN202507150000
+2025-07-15,17:59,BookMyShow Events,-2820,Entertainment,Expense,UPI,TXN202507150000
+2025-07-15,19:46,Amazon Shopping,-3560,Shopping,Expense,Card,TXN202507150000
+2025-07-15,21:40,Nykaa Beauty,-850,Shopping,Expense,Cash,TXN202507150000
+2025-07-15,22:49,Toll Charges,-160,Transportation,Expense,Cash,TXN202507150000
+2025-07-16,07:41,LPG Gas Cylinder,-930,Utilities,Expense,Card,TXN202507160000
+2025-07-16,12:44,Swiggy Order,-340,Food & Dining,Expense,UPI,TXN202507160000
+2025-07-16,22:43,Internet Bill,-1300,Utilities,Expense,Net Banking,TXN202507160000
+2025-07-16,23:15,Concert Tickets,-3120,Entertainment,Expense,Cash,TXN202507160000
+2025-07-17,15:42,Haldiram's,-280,Food & Dining,Expense,UPI,TXN202507170000
+2025-07-17,16:37,Reliance Fresh,-530,Groceries,Expense,UPI,TXN202507170000
+2025-07-17,20:19,Rapido Bike,-70,Transportation,Expense,Net Banking,TXN202507170000
+2025-07-18,11:35,Ice Cream Parlor,-160,Food & Dining,Expense,Net Banking,TXN202507180000
+2025-07-18,11:41,Dental Checkup,-1340,Healthcare,Expense,Net Banking,TXN202507180000
+2025-07-18,13:31,Burger King,-440,Food & Dining,Expense,UPI,TXN202507180000
+2025-07-18,16:05,Fruit Shop,-440,Groceries,Expense,Net Banking,TXN202507180000
+2025-07-18,22:17,Mobile Recharge,-610,Utilities,Expense,Cash,TXN202507180000
+2025-07-18,23:06,Local Kirana Store,-220,Groceries,Expense,Card,TXN202507180000
+2025-07-18,23:23,Swiggy Order,-410,Food & Dining,Expense,Card,TXN202507180000
+2025-07-19,08:53,Flipkart Purchase,-3930,Shopping,Expense,Cash,TXN202507190000
+2025-07-19,17:36,Flipkart Purchase,-3490,Shopping,Expense,Cash,TXN202507190000
+2025-07-19,20:34,Water Bill,-490,Utilities,Expense,UPI,TXN202507190000
+2025-07-20,07:05,Reliance Digital,-5640,Shopping,Expense,UPI,TXN202507200000
+2025-07-20,09:30,Auto Rickshaw,-90,Transportation,Expense,Net Banking,TXN202507200000
+2025-07-20,12:11,Paytm Transfer,-1770,Transfer,Expense,Card,TXN202507200000
+2025-07-20,13:57,Decathlon Sports,-3820,Shopping,Expense,Card,TXN202507200000
+2025-07-20,16:01,More Supermarket,-480,Groceries,Expense,Cash,TXN202507200000
+2025-07-20,20:03,Westside Shopping,-2010,Shopping,Expense,Cash,TXN202507200000
+2025-07-20,20:15,Street Food,-170,Food & Dining,Expense,Card,TXN202507200000
+2025-07-20,20:47,Dunzo Daily,-440,Groceries,Expense,Net Banking,TXN202507200000
+2025-07-21,06:25,Reliance Digital,-3140,Shopping,Expense,Cash,TXN202507210000
+2025-07-21,07:37,KFC,-500,Food & Dining,Expense,Cash,TXN202507210000
+2025-07-21,14:40,Local Restaurant,-1250,Food & Dining,Expense,Net Banking,TXN202507210000
+2025-07-21,17:56,Dominos Pizza,-640,Food & Dining,Expense,Net Banking,TXN202507210000
+2025-07-21,22:04,Blinkit Delivery,-290,Groceries,Expense,UPI,TXN202507210000
+2025-07-22,07:26,Bike Service,-1660,Transportation,Expense,Card,TXN202507220000
+2025-07-22,17:17,Doctor Consultation,-1370,Healthcare,Expense,UPI,TXN202507220000
+2025-07-23,06:53,Croma Electronics,-13470,Shopping,Expense,Cash,TXN202507230000
+2025-07-23,13:11,Ola Cab,-190,Transportation,Expense,Net Banking,TXN202507230000
+2025-07-23,17:58,Metro Recharge,-230,Transportation,Expense,Cash,TXN202507230000
+2025-07-23,19:37,Mobile Recharge,-420,Utilities,Expense,Net Banking,TXN202507230000
+2025-07-23,21:13,Ola Cab,-180,Transportation,Expense,UPI,TXN202507230000
+2025-07-24,08:14,Car Service,-3160,Transportation,Expense,Card,TXN202507240000
+2025-07-24,17:49,Swiggy Instamart,-560,Groceries,Expense,UPI,TXN202507240000
+2025-07-24,20:48,Reliance Fresh,-1430,Groceries,Expense,UPI,TXN202507240000
+2025-07-25,08:39,Spotify Premium,-120,Entertainment,Expense,Cash,TXN202507250000
+2025-07-25,17:31,Starbucks Coffee,-310,Food & Dining,Expense,Net Banking,TXN202507250000
+2025-07-25,17:37,DTH Recharge,-430,Utilities,Expense,UPI,TXN202507250000
+2025-07-25,20:15,Local Restaurant,-670,Food & Dining,Expense,Card,TXN202507250000
+2025-07-25,21:59,Bus Ticket,-40,Transportation,Expense,Card,TXN202507250000
+2025-07-25,22:34,Auto Rickshaw,-150,Transportation,Expense,Cash,TXN202507250000
+2025-07-26,06:32,PVR Movie Tickets,-830,Entertainment,Expense,Net Banking,TXN202507260000
+2025-07-26,07:31,Flipkart Purchase,-3230,Shopping,Expense,UPI,TXN202507260000
+2025-07-26,09:26,Flipkart Purchase,-1220,Shopping,Expense,Cash,TXN202507260000
+2025-07-26,10:06,Biryani Restaurant,-530,Food & Dining,Expense,Cash,TXN202507260000
+2025-07-26,16:39,Uber Ride,-180,Transportation,Expense,Card,TXN202507260000
+2025-07-26,16:42,Zomato Delivery,-320,Food & Dining,Expense,UPI,TXN202507260000
+2025-07-26,17:52,1mg Medicine Order,-1430,Healthcare,Expense,UPI,TXN202507260000
+2025-07-26,19:36,Cafe Coffee Day,-280,Food & Dining,Expense,UPI,TXN202507260000
+2025-07-27,08:22,Zomato Delivery,-510,Food & Dining,Expense,UPI,TXN202507270000
+2025-07-27,10:48,Bank Transfer,-3950,Transfer,Expense,Net Banking,TXN202507270000
+2025-07-27,22:13,INOX Cinema,-450,Entertainment,Expense,Net Banking,TXN202507270000
+2025-07-27,23:55,Westside Shopping,-1030,Shopping,Expense,Cash,TXN202507270000
+2025-07-28,10:06,More Supermarket,-1950,Groceries,Expense,Cash,TXN202507280000
+2025-07-28,12:58,Disney+ Hotstar,-790,Entertainment,Expense,Card,TXN202507280000
+2025-07-28,16:12,Maintenance Charges,-3610,Utilities,Expense,Net Banking,TXN202507280000
+2025-07-28,16:46,Toll Charges,-120,Transportation,Expense,Cash,TXN202507280000
+2025-07-28,20:39,Ola Cab,-110,Transportation,Expense,Card,TXN202507280000
+2025-07-29,07:00,Flight Booking,-2600,Transportation,Expense,Net Banking,TXN202507290000
+2025-07-29,15:54,PhonePe Payment,-310,Transfer,Expense,Card,TXN202507290000
+2025-07-29,16:29,Barbeque Nation,-1910,Food & Dining,Expense,Cash,TXN202507290000
+2025-07-30,06:02,Tea/Coffee Shop,-110,Food & Dining,Expense,Cash,TXN202507300000
+2025-07-30,11:48,Bus Ticket,-30,Transportation,Expense,Cash,TXN202507300000
+2025-07-30,13:32,Haldiram's,-150,Food & Dining,Expense,Net Banking,TXN202507300000
+2025-07-30,15:48,South Indian Restaurant,-320,Food & Dining,Expense,Cash,TXN202507300000
+2025-07-30,22:09,Local Market,-540,Shopping,Expense,UPI,TXN202507300000
+2025-07-31,08:15,Paytm Transfer,-120,Transfer,Expense,Cash,TXN202507310000
+2025-07-31,10:21,Dunzo Daily,-350,Groceries,Expense,Cash,TXN202507310000
+2025-07-31,12:10,Dunzo Daily,-190,Groceries,Expense,Card,TXN202507310000
+2025-08-01,08:17,Bakery Items,-190,Food & Dining,Expense,Cash,TXN202508010156
+2025-08-01,10:30,Salary Credited,288000,Income,Income,Bank Transfer,SAL20250801001
+2025-08-01,17:01,Swiggy Order,-250,Food & Dining,Expense,Card,TXN202508010156
+2025-08-01,17:06,YouTube Premium,-190,Entertainment,Expense,Net Banking,TXN202508010156
+2025-08-01,19:08,BookMyShow Events,-710,Entertainment,Expense,Cash,TXN202508010156
+2025-08-02,06:05,Water Bill,-500,Utilities,Expense,Card,TXN202508020156
+2025-08-02,09:45,Gym Membership,-2940,Healthcare,Expense,Cash,TXN202508020156
+2025-08-02,10:14,Doctor Consultation,-540,Healthcare,Expense,Cash,TXN202508020156
+2025-08-02,10:26,Subway,-360,Food & Dining,Expense,UPI,TXN202508020156
+2025-08-02,15:15,Family Support,-6220,Transfer,Expense,Net Banking,TXN202508020156
+2025-08-02,22:58,Haldiram's,-240,Food & Dining,Expense,UPI,TXN202508020156
+2025-08-03,08:36,Subway,-290,Food & Dining,Expense,Net Banking,TXN202508030156
+2025-08-03,08:39,D-Mart Shopping,-3930,Shopping,Expense,Cash,TXN202508030156
+2025-08-03,08:45,Street Food,-200,Food & Dining,Expense,Cash,TXN202508030156
+2025-08-03,09:33,Haldiram's,-260,Food & Dining,Expense,Cash,TXN202508030156
+2025-08-03,11:13,Maintenance Charges,-4340,Utilities,Expense,Cash,TXN202508030156
+2025-08-03,14:53,Fruit Shop,-440,Groceries,Expense,Cash,TXN202508030156
+2025-08-03,18:49,Swiggy Order,-230,Food & Dining,Expense,Net Banking,TXN202508030156
+2025-08-03,19:49,Nykaa Beauty,-1980,Shopping,Expense,Card,TXN202508030156
+2025-08-03,21:09,Decathlon Sports,-2160,Shopping,Expense,Net Banking,TXN202508030156
+2025-08-03,21:37,Lifestyle Store,-2800,Shopping,Expense,Card,TXN202508030156
+2025-08-04,10:06,D-Mart Shopping,-4290,Shopping,Expense,Net Banking,TXN202508040156
+2025-08-04,12:52,Swiggy Order,-190,Food & Dining,Expense,Card,TXN202508040156
+2025-08-04,13:56,McDonald's,-360,Food & Dining,Expense,Cash,TXN202508040156
+2025-08-04,15:09,Zepto Quick,-560,Groceries,Expense,Net Banking,TXN202508040156
+2025-08-04,15:30,Water Bill,-550,Utilities,Expense,Cash,TXN202508040156
+2025-08-04,22:41,Decathlon Sports,-3540,Shopping,Expense,UPI,TXN202508040156
+2025-08-05,07:05,Pizza Hut,-550,Food & Dining,Expense,UPI,TXN202508050156
+2025-08-05,08:14,Nykaa Beauty,-700,Shopping,Expense,UPI,TXN202508050156
+2025-08-05,17:47,Health Insurance,-4900,Healthcare,Expense,Cash,TXN202508050156
+2025-08-05,19:50,Parking Fees,-90,Transportation,Expense,UPI,TXN202508050156
+2025-08-06,06:10,Water Bill,-540,Utilities,Expense,Card,TXN202508060156
+2025-08-06,09:34,Mobile Recharge,-380,Utilities,Expense,Cash,TXN202508060156
+2025-08-06,16:07,PVR Movie Tickets,-960,Entertainment,Expense,Cash,TXN202508060156
+2025-08-06,16:32,Vegetable Vendor,-210,Groceries,Expense,Card,TXN202508060156
+2025-08-06,19:30,LPG Gas Cylinder,-990,Utilities,Expense,Cash,TXN202508060156
+2025-08-06,20:28,Internet Bill,-1170,Utilities,Expense,Card,TXN202508060156
+2025-08-07,10:09,Dominos Pizza,-760,Food & Dining,Expense,Cash,TXN202508070156
+2025-08-07,14:35,Uber Ride,-110,Transportation,Expense,Card,TXN202508070156
+2025-08-07,18:55,Subway,-260,Food & Dining,Expense,Card,TXN202508070156
+2025-08-07,19:19,Zepto Quick,-530,Groceries,Expense,Card,TXN202508070156
+2025-08-07,23:14,Parking Fees,-80,Transportation,Expense,Card,TXN202508070156
+2025-08-07,23:41,Cafe Coffee Day,-150,Food & Dining,Expense,UPI,TXN202508070156
+2025-08-08,21:13,Swiggy Order,-360,Food & Dining,Expense,Cash,TXN202508080156
+2025-08-08,22:40,Disney+ Hotstar,-1330,Entertainment,Expense,UPI,TXN202508080156
+2025-08-09,09:17,Bank Transfer,-4630,Transfer,Expense,Net Banking,TXN202508090156
+2025-08-09,13:37,Netflix Subscription,-420,Entertainment,Expense,Card,TXN202508090156
+2025-08-09,13:41,Chinese Restaurant,-890,Food & Dining,Expense,Net Banking,TXN202508090156
+2025-08-09,14:56,Big Bazaar,-2790,Shopping,Expense,Cash,TXN202508090156
+2025-08-10,06:19,Spotify Premium,-120,Entertainment,Expense,Net Banking,TXN202508100156
+2025-08-10,06:33,Decathlon Sports,-3680,Shopping,Expense,Cash,TXN202508100156
+2025-08-10,09:40,Doctor Consultation,-1450,Healthcare,Expense,Card,TXN202508100156
+2025-08-10,09:54,Biryani Restaurant,-440,Food & Dining,Expense,Card,TXN202508100156
+2025-08-10,11:15,Fruit Shop,-580,Groceries,Expense,Net Banking,TXN202508100156
+2025-08-10,14:32,Maintenance Charges,-4740,Utilities,Expense,Card,TXN202508100156
+2025-08-10,18:16,Star Bazaar,-1810,Groceries,Expense,Card,TXN202508100156
+2025-08-10,20:47,Street Food,-180,Food & Dining,Expense,Cash,TXN202508100156
+2025-08-10,23:06,Amazon Shopping,-2760,Shopping,Expense,Cash,TXN202508100156
+2025-08-11,09:03,Swiggy Order,-230,Food & Dining,Expense,Card,TXN202508110156
+2025-08-11,10:19,Bakery Items,-290,Food & Dining,Expense,Card,TXN202508110156
+2025-08-11,11:49,Big Bazaar,-1960,Shopping,Expense,Net Banking,TXN202508110156
+2025-08-11,14:29,Internet Bill,-610,Utilities,Expense,UPI,TXN202508110156
+2025-08-11,21:26,Star Bazaar,-1260,Groceries,Expense,Card,TXN202508110156
+2025-08-11,23:29,Maintenance Charges,-4130,Utilities,Expense,Net Banking,TXN202508110156
+2025-08-12,07:30,Health Insurance,-3190,Healthcare,Expense,Card,TXN202508120156
+2025-08-12,12:48,Dominos Pizza,-710,Food & Dining,Expense,Net Banking,TXN202508120156
+2025-08-12,16:15,Myntra Fashion,-2310,Shopping,Expense,Net Banking,TXN202508120156
+2025-08-12,18:57,Parking Fees,-70,Transportation,Expense,Cash,TXN202508120156
+2025-08-12,20:55,McDonald's,-280,Food & Dining,Expense,UPI,TXN202508120156
+2025-08-13,09:45,Ola Cab,-290,Transportation,Expense,Card,TXN202508130156
+2025-08-13,11:14,Metro Recharge,-410,Transportation,Expense,UPI,TXN202508130156
+2025-08-13,21:11,South Indian Restaurant,-220,Food & Dining,Expense,Net Banking,TXN202508130156
+2025-08-13,21:24,Haldiram's,-390,Food & Dining,Expense,Card,TXN202508130156
+2025-08-13,22:17,Flight Booking,-7170,Transportation,Expense,Card,TXN202508130156
+2025-08-14,09:35,Spotify Premium,-120,Entertainment,Expense,Net Banking,TXN202508140156
+2025-08-14,14:42,INOX Cinema,-750,Entertainment,Expense,UPI,TXN202508140156
+2025-08-14,22:09,1mg Medicine Order,-1640,Healthcare,Expense,UPI,TXN202508140156
+2025-08-14,22:16,Water Bill,-230,Utilities,Expense,Cash,TXN202508140156
+2025-08-15,09:18,Westside Shopping,-1630,Shopping,Expense,Cash,TXN202508150156
+2025-08-15,11:52,Reliance Fresh,-1280,Groceries,Expense,Net Banking,TXN202508150156
+2025-08-15,15:00,Myntra Fashion,-2060,Shopping,Expense,Cash,TXN202508150156
+2025-08-15,17:11,Metro Recharge,-110,Transportation,Expense,Card,TXN202508150156
+2025-08-15,17:41,Skill Development,-1020,Education,Expense,Card,TXN202508150156
+2025-08-15,18:14,Decathlon Sports,-2080,Shopping,Expense,Cash,TXN202508150156
+2025-08-16,09:55,Big Bazaar,-3150,Shopping,Expense,Card,TXN202508160156
+2025-08-16,10:03,Decathlon Sports,-1340,Shopping,Expense,Net Banking,TXN202508160156
+2025-08-16,11:41,BigBasket Order,-1500,Groceries,Expense,Net Banking,TXN202508160156
+2025-08-16,13:25,Swiggy Instamart,-370,Groceries,Expense,Card,TXN202508160156
+2025-08-16,22:32,Car Service,-2400,Transportation,Expense,UPI,TXN202508160156
+2025-08-16,23:02,WiFi Bill,-930,Utilities,Expense,Card,TXN202508160156
+2025-08-17,07:03,Train Booking IRCTC,-250,Transportation,Expense,Cash,TXN202508170156
+2025-08-17,08:22,Max Fashion,-860,Shopping,Expense,Net Banking,TXN202508170156
+2025-08-17,11:30,BigBasket Order,-1440,Groceries,Expense,UPI,TXN202508170156
+2025-08-17,13:03,Doctor Consultation,-1180,Healthcare,Expense,UPI,TXN202508170156
+2025-08-17,14:04,KFC,-310,Food & Dining,Expense,Net Banking,TXN202508170156
+2025-08-17,16:05,Reliance Fresh,-1010,Groceries,Expense,UPI,TXN202508170156
+2025-08-17,17:41,Milk Dairy,-190,Groceries,Expense,Cash,TXN202508170156
+2025-08-17,19:09,Local Restaurant,-940,Food & Dining,Expense,Card,TXN202508170156
+2025-08-17,22:09,Chinese Restaurant,-740,Food & Dining,Expense,Card,TXN202508170156
+2025-08-17,23:22,Metro Recharge,-340,Transportation,Expense,Cash,TXN202508170156
+2025-08-18,14:40,Rent Payment,-18290,Transfer,Expense,UPI,TXN202508180156
+2025-08-18,18:46,Star Bazaar,-2120,Groceries,Expense,Cash,TXN202508180156
+2025-08-18,19:50,Starbucks Coffee,-330,Food & Dining,Expense,Cash,TXN202508180156
+2025-08-19,06:03,PVR Movie Tickets,-1260,Entertainment,Expense,Net Banking,TXN202508190156
+2025-08-19,11:59,Petrol Pump,-2110,Transportation,Expense,Net Banking,TXN202508190156
+2025-08-19,16:28,Flight Booking,-8350,Transportation,Expense,Net Banking,TXN202508190156
+2025-08-19,16:57,Milk Dairy,-140,Groceries,Expense,UPI,TXN202508190156
+2025-08-20,12:58,Barbeque Nation,-1300,Food & Dining,Expense,Cash,TXN202508200156
+2025-08-20,20:05,Swiggy Order,-470,Food & Dining,Expense,Cash,TXN202508200156
+2025-08-21,08:20,Max Fashion,-890,Shopping,Expense,Net Banking,TXN202508210156
+2025-08-21,09:13,Bowling Alley,-640,Entertainment,Expense,UPI,TXN202508210156
+2025-08-21,11:27,WiFi Bill,-930,Utilities,Expense,Card,TXN202508210156
+2025-08-21,13:51,Electricity Bill,-920,Utilities,Expense,UPI,TXN202508210156
+2025-08-21,21:54,Burger King,-350,Food & Dining,Expense,Net Banking,TXN202508210156
+2025-08-21,23:34,LPG Gas Cylinder,-930,Utilities,Expense,Net Banking,TXN202508210156
+2025-08-22,07:05,Petrol Pump,-540,Transportation,Expense,Card,TXN202508220156
+2025-08-22,09:23,Rapido Bike,-120,Transportation,Expense,Net Banking,TXN202508220156
+2025-08-22,17:52,Nature's Basket,-2420,Groceries,Expense,Net Banking,TXN202508220156
+2025-08-22,20:12,Reliance Digital,-3640,Shopping,Expense,Net Banking,TXN202508220156
+2025-08-22,20:32,South Indian Restaurant,-440,Food & Dining,Expense,Cash,TXN202508220156
+2025-08-22,23:05,Haldiram's,-210,Food & Dining,Expense,UPI,TXN202508220156
+2025-08-23,09:18,Mobile Recharge,-330,Utilities,Expense,Cash,TXN202508230156
+2025-08-23,10:42,Toll Charges,-90,Transportation,Expense,Card,TXN202508230156
+2025-08-23,14:40,Bank Transfer,-4350,Transfer,Expense,Card,TXN202508230156
+2025-08-23,18:26,Concert Tickets,-2170,Entertainment,Expense,Cash,TXN202508230156
+2025-08-23,20:55,Toll Charges,-140,Transportation,Expense,Card,TXN202508230156
+2025-08-24,06:00,Ola Cab,-260,Transportation,Expense,Net Banking,TXN202508240156
+2025-08-24,10:19,Burger King,-390,Food & Dining,Expense,UPI,TXN202508240156
+2025-08-24,13:15,Bowling Alley,-680,Entertainment,Expense,UPI,TXN202508240156
+2025-08-24,16:49,Bus Ticket,-100,Transportation,Expense,UPI,TXN202508240156
+2025-08-24,18:05,WiFi Bill,-670,Utilities,Expense,UPI,TXN202508240156
+2025-08-24,23:09,Haldiram's,-200,Food & Dining,Expense,Cash,TXN202508240156
+2025-08-24,23:16,Croma Electronics,-1940,Shopping,Expense,Card,TXN202508240156
+2025-08-25,13:31,Car Service,-2220,Transportation,Expense,Net Banking,TXN202508250156
+2025-08-25,21:17,Metro Recharge,-240,Transportation,Expense,Net Banking,TXN202508250156
+2025-08-25,21:51,Milk Dairy,-70,Groceries,Expense,UPI,TXN202508250156
+2025-08-25,23:28,Local Restaurant,-1360,Food & Dining,Expense,Card,TXN202508250156
+2025-08-26,07:50,Metro Recharge,-120,Transportation,Expense,Net Banking,TXN202508260156
+2025-08-26,09:47,Dominos Pizza,-660,Food & Dining,Expense,Net Banking,TXN202508260156
+2025-08-27,07:25,Chinese Restaurant,-1140,Food & Dining,Expense,Cash,TXN202508270156
+2025-08-27,10:50,More Supermarket,-480,Groceries,Expense,Net Banking,TXN202508270156
+2025-08-27,16:08,Rapido Bike,-140,Transportation,Expense,Cash,TXN202508270156
+2025-08-27,21:12,WiFi Bill,-940,Utilities,Expense,Card,TXN202508270156
+2025-08-28,20:39,Chinese Restaurant,-860,Food & Dining,Expense,UPI,TXN202508280156
+2025-08-28,20:56,Amazon Prime,-180,Entertainment,Expense,Cash,TXN202508280156
+2025-08-28,22:27,Bakery Items,-240,Food & Dining,Expense,Card,TXN202508280156
+2025-08-29,10:59,Street Food,-80,Food & Dining,Expense,Net Banking,TXN202508290156
+2025-08-29,23:27,Bakery Items,-120,Food & Dining,Expense,Card,TXN202508290156
+2025-08-30,08:07,Biryani Restaurant,-800,Food & Dining,Expense,Cash,TXN202508300156
+2025-08-30,09:05,Starbucks Coffee,-470,Food & Dining,Expense,Net Banking,TXN202508300156
+2025-08-30,12:04,Lab Tests,-1800,Healthcare,Expense,Net Banking,TXN202508300156
+2025-08-30,13:53,Decathlon Sports,-3940,Shopping,Expense,UPI,TXN202508300156
+2025-08-30,14:08,Pizza Hut,-700,Food & Dining,Expense,Card,TXN202508300156
+2025-08-30,16:13,Rapido Bike,-150,Transportation,Expense,Cash,TXN202508300156
+2025-08-30,17:22,Vegetable Vendor,-350,Groceries,Expense,UPI,TXN202508300156
+2025-08-30,20:36,Starbucks Coffee,-340,Food & Dining,Expense,UPI,TXN202508300156
+2025-08-31,10:54,Bus Ticket,-30,Transportation,Expense,Cash,TXN202508310156
+2025-08-31,12:12,BookMyShow Events,-2810,Entertainment,Expense,Cash,TXN202508310156
+2025-08-31,21:24,Chinese Restaurant,-600,Food & Dining,Expense,Cash,TXN202508310156
+2025-09-01,09:02,Auto Rickshaw,-130,Transportation,Expense,UPI,TXN202509010315
+2025-09-01,10:30,Salary Credited,217000,Income,Income,Bank Transfer,SAL20250901001
+2025-09-01,13:11,YouTube Premium,-150,Entertainment,Expense,UPI,TXN202509010315
+2025-09-01,14:36,INOX Cinema,-1070,Entertainment,Expense,Cash,TXN202509010315
+2025-09-01,21:42,Ajio Clothing,-1460,Shopping,Expense,Card,TXN202509010315
+2025-09-01,23:43,Ola Cab,-290,Transportation,Expense,Cash,TXN202509010315
+2025-09-02,06:03,Ajio Clothing,-1640,Shopping,Expense,Net Banking,TXN202509020315
+2025-09-02,08:25,Flipkart Purchase,-2160,Shopping,Expense,UPI,TXN202509020315
+2025-09-02,11:10,Auto Rickshaw,-130,Transportation,Expense,Net Banking,TXN202509020315
+2025-09-02,14:08,Bakery Items,-100,Food & Dining,Expense,UPI,TXN202509020315
+2025-09-02,21:15,Amusement Park,-1310,Entertainment,Expense,Net Banking,TXN202509020315
+2025-09-02,21:20,Cafe Coffee Day,-280,Food & Dining,Expense,Net Banking,TXN202509020315
+2025-09-02,23:40,Rapido Bike,-110,Transportation,Expense,UPI,TXN202509020315
+2025-09-03,12:04,Eye Checkup,-1780,Healthcare,Expense,Card,TXN202509030315
+2025-09-03,12:20,Local Kirana Store,-260,Groceries,Expense,Net Banking,TXN202509030315
+2025-09-03,15:42,Dominos Pizza,-660,Food & Dining,Expense,UPI,TXN202509030315
+2025-09-03,22:11,Nature's Basket,-2000,Groceries,Expense,Cash,TXN202509030315
+2025-09-03,23:21,Gaming Purchase,-1520,Entertainment,Expense,UPI,TXN202509030315
+2025-09-04,07:20,Reliance Fresh,-680,Groceries,Expense,Net Banking,TXN202509040315
+2025-09-04,07:39,Parking Fees,-80,Transportation,Expense,Cash,TXN202509040315
+2025-09-04,17:38,Nature's Basket,-2280,Groceries,Expense,Card,TXN202509040315
+2025-09-04,21:08,Fruit Shop,-440,Groceries,Expense,Cash,TXN202509040315
+2025-09-05,17:33,EMI Payment,-12020,Transfer,Expense,Net Banking,TXN202509050315
+2025-09-05,21:19,Spotify Premium,-120,Entertainment,Expense,UPI,TXN202509050315
+2025-09-05,21:44,Reliance Fresh,-820,Groceries,Expense,Net Banking,TXN202509050315
+2025-09-06,06:37,DTH Recharge,-420,Utilities,Expense,UPI,TXN202509060315
+2025-09-06,08:10,Coursera Subscription,-440,Education,Expense,Cash,TXN202509060315
+2025-09-06,08:53,DTH Recharge,-310,Utilities,Expense,Card,TXN202509060315
+2025-09-06,11:21,Barbeque Nation,-1430,Food & Dining,Expense,Cash,TXN202509060315
+2025-09-06,13:00,Reliance Fresh,-450,Groceries,Expense,Net Banking,TXN202509060315
+2025-09-06,16:40,Friend Payment,-2000,Transfer,Expense,Net Banking,TXN202509060315
+2025-09-06,19:19,Subway,-250,Food & Dining,Expense,Net Banking,TXN202509060315
+2025-09-06,19:40,Milk Dairy,-160,Groceries,Expense,Net Banking,TXN202509060315
+2025-09-06,19:46,Biryani Restaurant,-710,Food & Dining,Expense,Cash,TXN202509060315
+2025-09-06,20:28,Myntra Fashion,-2610,Shopping,Expense,UPI,TXN202509060315
+2025-09-07,07:46,Disney+ Hotstar,-890,Entertainment,Expense,UPI,TXN202509070315
+2025-09-07,08:28,D-Mart Shopping,-3100,Shopping,Expense,UPI,TXN202509070315
+2025-09-07,12:14,Bowling Alley,-570,Entertainment,Expense,Card,TXN202509070315
+2025-09-07,14:04,Decathlon Sports,-1250,Shopping,Expense,Net Banking,TXN202509070315
+2025-09-07,18:31,More Supermarket,-1040,Groceries,Expense,Card,TXN202509070315
+2025-09-07,19:46,YouTube Premium,-170,Entertainment,Expense,UPI,TXN202509070315
+2025-09-07,20:38,Car Service,-3970,Transportation,Expense,Cash,TXN202509070315
+2025-09-08,06:06,Starbucks Coffee,-270,Food & Dining,Expense,Net Banking,TXN202509080315
+2025-09-08,12:57,Blinkit Delivery,-260,Groceries,Expense,Card,TXN202509080315
+2025-09-08,14:02,Train Booking IRCTC,-850,Transportation,Expense,UPI,TXN202509080315
+2025-09-08,19:52,Chinese Restaurant,-510,Food & Dining,Expense,Card,TXN202509080315
+2025-09-08,22:01,LPG Gas Cylinder,-1060,Utilities,Expense,Cash,TXN202509080315
+2025-09-09,16:47,Train Booking IRCTC,-930,Transportation,Expense,Card,TXN202509090315
+2025-09-09,16:54,Pizza Hut,-810,Food & Dining,Expense,Card,TXN202509090315
+2025-09-09,17:27,Local Kirana Store,-500,Groceries,Expense,UPI,TXN202509090315
+2025-09-09,21:24,McDonald's,-280,Food & Dining,Expense,Card,TXN202509090315
+2025-09-09,22:05,Haldiram's,-180,Food & Dining,Expense,Card,TXN202509090315
+2025-09-10,10:46,Starbucks Coffee,-260,Food & Dining,Expense,Card,TXN202509100315
+2025-09-10,14:53,Health Insurance,-1090,Healthcare,Expense,Cash,TXN202509100315
+2025-09-10,15:30,Blinkit Delivery,-400,Groceries,Expense,UPI,TXN202509100315
+2025-09-10,16:12,Cafe Coffee Day,-220,Food & Dining,Expense,Cash,TXN202509100315
+2025-09-10,18:06,Flipkart Purchase,-3610,Shopping,Expense,UPI,TXN202509100315
+2025-09-10,19:55,Biryani Restaurant,-530,Food & Dining,Expense,Cash,TXN202509100315
+2025-09-11,09:09,LPG Gas Cylinder,-990,Utilities,Expense,UPI,TXN202509110315
+2025-09-11,18:33,Swiggy Order,-270,Food & Dining,Expense,Net Banking,TXN202509110315
+2025-09-12,10:20,Tea/Coffee Shop,-120,Food & Dining,Expense,Net Banking,TXN202509120315
+2025-09-12,20:41,Cafe Coffee Day,-240,Food & Dining,Expense,UPI,TXN202509120315
+2025-09-12,22:02,Friend Payment,-970,Transfer,Expense,Cash,TXN202509120315
+2025-09-13,07:18,LPG Gas Cylinder,-1050,Utilities,Expense,UPI,TXN202509130315
+2025-09-13,07:36,Concert Tickets,-1110,Entertainment,Expense,UPI,TXN202509130315
+2025-09-13,10:35,Parking Fees,-50,Transportation,Expense,Net Banking,TXN202509130315
+2025-09-13,10:56,Chinese Restaurant,-780,Food & Dining,Expense,Net Banking,TXN202509130315
+2025-09-13,17:39,Train Booking IRCTC,-760,Transportation,Expense,Cash,TXN202509130315
+2025-09-13,19:41,Reliance Fresh,-750,Groceries,Expense,Cash,TXN202509130315
+2025-09-13,19:41,Bike Service,-900,Transportation,Expense,Card,TXN202509130315
+2025-09-13,19:44,Parking Fees,-70,Transportation,Expense,Cash,TXN202509130315
+2025-09-13,21:17,D-Mart Shopping,-2190,Shopping,Expense,Cash,TXN202509130315
+2025-09-13,22:52,Barbeque Nation,-1960,Food & Dining,Expense,Cash,TXN202509130315
+2025-09-14,07:12,Bike Service,-980,Transportation,Expense,Net Banking,TXN202509140315
+2025-09-14,07:50,Starbucks Coffee,-420,Food & Dining,Expense,Card,TXN202509140315
+2025-09-14,07:54,Zepto Quick,-520,Groceries,Expense,Net Banking,TXN202509140315
+2025-09-14,09:49,Burger King,-290,Food & Dining,Expense,Net Banking,TXN202509140315
+2025-09-14,19:12,Swiggy Instamart,-220,Groceries,Expense,Card,TXN202509140315
+2025-09-14,20:26,Zepto Quick,-260,Groceries,Expense,Card,TXN202509140315
+2025-09-14,21:10,PPF Contribution,-6000,Investment,Expense,Cash,TXN202509140315
+2025-09-14,22:11,1mg Medicine Order,-1330,Healthcare,Expense,Net Banking,TXN202509140315
+2025-09-14,22:57,Google Pay Transfer,-3240,Transfer,Expense,Net Banking,TXN202509140315
+2025-09-15,09:29,Dominos Pizza,-670,Food & Dining,Expense,Cash,TXN202509150315
+2025-09-15,11:18,Auto Rickshaw,-30,Transportation,Expense,Cash,TXN202509150315
+2025-09-15,12:08,Local Restaurant,-310,Food & Dining,Expense,Card,TXN202509150315
+2025-09-15,12:54,Dominos Pizza,-420,Food & Dining,Expense,UPI,TXN202509150315
+2025-09-15,18:59,Toll Charges,-140,Transportation,Expense,Cash,TXN202509150315
+2025-09-16,09:28,Vegetable Vendor,-360,Groceries,Expense,Cash,TXN202509160315
+2025-09-16,10:07,Bike Service,-530,Transportation,Expense,Net Banking,TXN202509160315
+2025-09-16,18:38,Maintenance Charges,-3840,Utilities,Expense,UPI,TXN202509160315
+2025-09-16,22:01,Dominos Pizza,-420,Food & Dining,Expense,UPI,TXN202509160315
+2025-09-17,11:44,Parking Fees,-80,Transportation,Expense,Cash,TXN202509170315
+2025-09-17,12:33,Pizza Hut,-730,Food & Dining,Expense,Card,TXN202509170315
+2025-09-17,12:49,Car Service,-1710,Transportation,Expense,Net Banking,TXN202509170315
+2025-09-18,08:12,Metro Recharge,-310,Transportation,Expense,Card,TXN202509180315
+2025-09-18,15:59,Big Bazaar,-3410,Shopping,Expense,Net Banking,TXN202509180315
+2025-09-19,09:58,Metro Recharge,-190,Transportation,Expense,UPI,TXN202509190315
+2025-09-19,21:05,Nykaa Beauty,-1700,Shopping,Expense,Net Banking,TXN202509190315
+2025-09-20,09:52,McDonald's,-250,Food & Dining,Expense,Cash,TXN202509200315
+2025-09-20,11:08,Toll Charges,-140,Transportation,Expense,UPI,TXN202509200315
+2025-09-20,12:47,Water Bill,-550,Utilities,Expense,UPI,TXN202509200315
+2025-09-21,06:07,DTH Recharge,-400,Utilities,Expense,Cash,TXN202509210315
+2025-09-21,06:55,Haldiram's,-280,Food & Dining,Expense,Cash,TXN202509210315
+2025-09-21,08:04,Zomato Delivery,-490,Food & Dining,Expense,UPI,TXN202509210315
+2025-09-21,10:07,Local Market,-660,Shopping,Expense,Net Banking,TXN202509210315
+2025-09-21,18:11,Dominos Pizza,-790,Food & Dining,Expense,Card,TXN202509210315
+2025-09-21,18:54,Milk Dairy,-190,Groceries,Expense,Card,TXN202509210315
+2025-09-21,19:18,Street Food,-90,Food & Dining,Expense,Net Banking,TXN202509210315
+2025-09-22,07:40,McDonald's,-220,Food & Dining,Expense,Net Banking,TXN202509220315
+2025-09-22,10:11,Nykaa Beauty,-1940,Shopping,Expense,Card,TXN202509220315
+2025-09-22,15:04,Concert Tickets,-1010,Entertainment,Expense,Card,TXN202509220315
+2025-09-22,21:20,Subway,-240,Food & Dining,Expense,Cash,TXN202509220315
+2025-09-23,07:49,DTH Recharge,-360,Utilities,Expense,Card,TXN202509230315
+2025-09-23,11:23,Burger King,-280,Food & Dining,Expense,Card,TXN202509230315
+2025-09-23,11:50,Amazon Shopping,-1950,Shopping,Expense,UPI,TXN202509230315
+2025-09-23,15:38,Ola Cab,-180,Transportation,Expense,Net Banking,TXN202509230315
+2025-09-23,18:28,Blinkit Delivery,-560,Groceries,Expense,Net Banking,TXN202509230315
+2025-09-24,06:17,BigBasket Order,-1870,Groceries,Expense,Card,TXN202509240315
+2025-09-24,11:47,Street Food,-190,Food & Dining,Expense,Cash,TXN202509240315
+2025-09-24,15:09,Bakery Items,-180,Food & Dining,Expense,Card,TXN202509240315
+2025-09-25,11:06,Flight Booking,-3350,Transportation,Expense,Card,TXN202509250315
+2025-09-25,12:22,Ice Cream Parlor,-250,Food & Dining,Expense,UPI,TXN202509250315
+2025-09-25,16:15,Vegetable Vendor,-150,Groceries,Expense,Card,TXN202509250315
+2025-09-26,16:40,Starbucks Coffee,-290,Food & Dining,Expense,Card,TXN202509260315
+2025-09-26,17:06,Nature's Basket,-960,Groceries,Expense,Card,TXN202509260315
+2025-09-26,18:07,Uber Ride,-200,Transportation,Expense,Cash,TXN202509260315
+2025-09-26,18:09,Reliance Fresh,-350,Groceries,Expense,Card,TXN202509260315
+2025-09-26,19:17,Uber Ride,-360,Transportation,Expense,Card,TXN202509260315
+2025-09-27,11:03,Amazon Prime,-180,Entertainment,Expense,Net Banking,TXN202509270315
+2025-09-27,13:11,Westside Shopping,-1560,Shopping,Expense,Cash,TXN202509270315
+2025-09-27,15:44,Spencer's Retail,-940,Groceries,Expense,Card,TXN202509270315
+2025-09-27,21:16,Zomato Delivery,-320,Food & Dining,Expense,Cash,TXN202509270315
+2025-09-28,06:27,Croma Electronics,-6940,Shopping,Expense,Cash,TXN202509280315
+2025-09-28,10:29,Amusement Park,-1090,Entertainment,Expense,Cash,TXN202509280315
+2025-09-28,11:21,Parking Fees,-60,Transportation,Expense,UPI,TXN202509280315
+2025-09-28,14:18,Pizza Hut,-680,Food & Dining,Expense,UPI,TXN202509280315
+2025-09-28,14:58,Zepto Quick,-370,Groceries,Expense,Card,TXN202509280315
+2025-09-28,17:49,Haldiram's,-160,Food & Dining,Expense,Card,TXN202509280315
+2025-09-28,21:20,Rapido Bike,-130,Transportation,Expense,Net Banking,TXN202509280315
+2025-09-28,23:06,Rapido Bike,-120,Transportation,Expense,Card,TXN202509280315
+2025-09-28,23:09,Bus Ticket,-60,Transportation,Expense,UPI,TXN202509280315
+2025-09-29,07:25,Auto Rickshaw,-120,Transportation,Expense,Card,TXN202509290315
+2025-09-29,13:23,Milk Dairy,-130,Groceries,Expense,Net Banking,TXN202509290315
+2025-09-29,15:24,Biryani Restaurant,-770,Food & Dining,Expense,Net Banking,TXN202509290315
+2025-09-29,17:36,EMI Payment,-12670,Transfer,Expense,UPI,TXN202509290315
+2025-09-29,22:13,Tea/Coffee Shop,-120,Food & Dining,Expense,Card,TXN202509290315
+2025-09-29,23:08,Internet Bill,-1000,Utilities,Expense,Cash,TXN202509290315
+2025-09-30,11:24,Lifestyle Store,-4430,Shopping,Expense,Net Banking,TXN202509300315
+2025-09-30,11:27,Vegetable Vendor,-130,Groceries,Expense,UPI,TXN202509300315
+2025-09-30,15:24,Electricity Bill,-2540,Utilities,Expense,Net Banking,TXN202509300315
+2025-09-30,21:25,McDonald's,-340,Food & Dining,Expense,Card,TXN202509300315
