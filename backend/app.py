@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import logging
+import re
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 import bcrypt  # New dependency for password hashing
@@ -13,6 +14,36 @@ import os
 from config import JWT_SECRET_KEY, JWT_ACCESS_TOKEN_EXPIRES_HOURS, FLASK_DEBUG, FLASK_PORT
 # Import the new LangChain RAG implementation
 import langchain_rag
+
+# Password validation function
+def validate_password(password):
+    """
+    Validate password requirements:
+    - At least 1 lowercase letter
+    - At least 1 uppercase letter  
+    - At least 1 digit
+    - At least 1 special character (@$!%*?&#^()[ ]{}_-+=~|:;,.<>)
+    """
+    if not password:
+        return "Password is required"
+    
+    # Check for at least one lowercase letter
+    if not re.search(r'[a-z]', password):
+        return "Password must contain at least one lowercase letter"
+    
+    # Check for at least one uppercase letter
+    if not re.search(r'[A-Z]', password):
+        return "Password must contain at least one uppercase letter"
+    
+    # Check for at least one digit
+    if not re.search(r'\d', password):
+        return "Password must contain at least one digit"
+    
+    # Check for at least one special character
+    if not re.search(r'[@$!%*?&#^()\[\]{}_\-+=~|:;,.<>]', password):
+        return "Password must contain at least one special character (@$!%*?&#^()[ ]{}_-+=~|:;,.<>)"
+    
+    return None  # No validation errors
 
 # Logger
 logger = logging.getLogger("api")
@@ -52,8 +83,10 @@ def signup():
     if not username or not email or not password:
         return jsonify({"message": "Missing required fields"}), 400
 
-    if len(password) < 6:
-        return jsonify({"message": "Password must be at least 6 characters"}), 400
+    # Validate password requirements
+    password_error = validate_password(password)
+    if password_error:
+        return jsonify({"message": password_error}), 400
 
     # Hash password using bcrypt (store as utf-8 string). Legacy users keep PBKDF2 hashes.
     salt = bcrypt.gensalt(rounds=12)
